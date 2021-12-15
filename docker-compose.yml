@@ -1,0 +1,27 @@
+version: "3.7"
+
+services:                        
+        ros2_deploy:
+                build:
+                    context: .
+                    dockerfile: ./Dockerfile/ros_deploy.Dockerfile
+                network_mode: "host"
+                ports:
+                    - "1883:1883"
+                devices:
+                    - "dev/bus/usb:/dev/bus/usb"
+                    - "dev/gpiochip0:/dev/gpiochip0"
+                    - "/dev/InclinometerPort:/dev/InclinometerPort"
+                    - "/dev/motor:/dev/motor"
+                container_name: ros2_deploy
+                entrypoint: /ros_entrypoint.sh
+                #command: tail -f /dev/null
+                #command: /script/run_ros2.sh
+                #command: /ros_entrypoint.sh
+                #command:
+                #    - sh
+                #    - -c
+                #    - |               
+                #        echo $env                                 
+                #        tail -f /dev/null
+                
