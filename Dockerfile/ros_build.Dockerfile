@@ -1,8 +1,6 @@
-#FROM jadehu/ros2_opencv AS opencv
-#FROM localhost:5000/vision_test_ros2_opencv AS opencv
-FROM docker_ros2_opencv:latest
-FROM docker_ros2_pcl:latest
-#FROM jadehu/ros2_pcl
+FROM jadehu/ros2_opencv AS opencv
+FROM jadehu/ros2_basler AS basler
+FROM jadehu/ros2_pcl
 LABEL maintainer="numajinfei@163.com"
 
 
@@ -46,12 +44,7 @@ RUN wget -O paho.mqtt.cpp.tar.gz https://github.com/eclipse/paho.mqtt.cpp/archiv
   && rm -r paho.mqtt.cpp-1.2.0 build
 
 # Install opencv
-COPY --from=docker_ros2_opencv:latest /opt/opencv /opt/opencv
+COPY --from=opencv/opt/opencv /opt/opencv
 
-# Install galaxy
-#COPY --from=basler /opt/pylon /opt/pylon
-COPY --from=docker_ros2_opencv:latest /opt/pylon /opt/pylon
-#COPY --from=basler /dev/bus/usb /dev/bus/usb
-#RUN mv /opt/galaxy/lib/*/* /opt/galaxy/lib/
-
-#ENV PYLON_ROOT=/opt/pylon
+# Install basler
+COPY --from=basler /opt/pylon /opt/pylon

@@ -13,7 +13,7 @@ RUN wget -O opencv.tar.gz https://github.com/opencv/opencv/archive/refs/tags/4.5
   && cmake \
     -D CMAKE_BUILD_TYPE:STRING=Release \
     -D CMAKE_INSTALL_PREFIX:STRING=/opt/opencv \
-    -D BUILD_LIST:STRING=core,imgproc,calib3d,,imgcodecs \
+    -D BUILD_LIST:STRING=core,imgproc,calib3d \
     -D BUILD_TESTS:BOOL=OFF \
     -D BUILD_PERF_TESTS:BOOL=OFF \
     -D BUILD_EXAMPLES:BOOL=OFF \
@@ -80,7 +80,4 @@ RUN wget -O opencv.tar.gz https://github.com/opencv/opencv/archive/refs/tags/4.5
     -S opencv-4.5.2/ \
     -B build/ \
   && cmake --build build/ --target install \
-  && rm -r opencv-4.5.2 build \
-  && echo "/opt/opencv/lib" >> /etc/ld.so.conf.d/OpenCV.conf \
-  && ldconfig
-
+  && rm -r opencv-4.5.2 build

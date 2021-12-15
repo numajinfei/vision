@@ -16,18 +16,20 @@ RUN if [ "$TARGETPLATFORM" = "linux/amd64" ]; then \
     && tar -xzvf pylon*.tar.gz \
     && mkdir /opt/pylon \
     && tar -C /opt/pylon -xzf ./pylon_*_x86_64.tar.gz \
-    && chmod 755 /opt/pylon \
-    && rm -r pylon* ; fi
+    && rm -r pylon* \
+    && echo /opt/pylon/lib" >> /etc/ld.so.conf.d/Pylon.conf \
+    && ldconfig; fi
 
-    
-    
-RUN  echo "platform is $TARGETPLATFORM, arch is $TARGETARCH, variant is $TARGETVARIANT, buildarch is $BUILDARCH, $(uname -p)" > /os.txt
 RUN if [ "$TARGETPLATFORM" = "linux/arm64" ]; then \
     wget -O pylon.tar.gz https://www.baslerweb.com/fp-1615276046/media/a_b_testing_1/pylon_6.2.0.21487_aarch64_setup.tar.gz \
     && tar -xzvf pylon*.tar.gz \
     && mkdir /opt/pylon \
     && tar -C /opt/pylon -xzf ./pylon_*_aarch64.tar.gz \
-    && rm -r pylon* ; fi
+    && rm -r pylon* \
+    && echo /opt/pylon/lib" >> /etc/ld.so.conf.d/Pylon.conf \
+    && ldconfig; fi
+    
+    
 
 #CMD ["sh", "-c", "echo \"/opt/pylon/bin/pylon-setup-env.sh\" >> ~/.bashrc && ldconfig"]
 
