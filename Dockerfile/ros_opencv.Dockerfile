@@ -82,28 +82,3 @@ RUN wget -O opencv.tar.gz https://github.com/opencv/opencv/archive/refs/tags/4.5
   && cmake --build build/ --target install \
   && rm -r opencv-4.5.2 build
 
-## basler
-# linux/amd64 or linux/arm64
-ARG TARGETPLATFORM
-#COPY ./pylon_6.2.0.21487_x86_64_setup.tar.gz ./pylon.tar.gz
-
-# Install basler pylon6.2
-RUN if [ "$TARGETPLATFORM" = "linux/amd64" ]; then \
-    wget -O pylon.tar.gz https://www.baslerweb.com/fp-1615275588/media/a_b_testing_1/pylon_6.2.0.21487_x86_64_setup.tar.gz \
-    && tar -xzvf pylon*.tar.gz \
-    tar -xzvf pylon*.tar.gz \
-    && mkdir /opt/pylon \
-    && tar -C /opt/pylon -xzf ./pylon_*_x86_64.tar.gz \
-    && chmod 755 /opt/pylon \
-    && rm -r pylon* ; fi
-
-RUN if [ "$(uname -p)" = "aarch64" ]; then \
-    wget -O pylon.tar.gz https://www.baslerweb.com/fp-1615276046/media/a_b_testing_1/pylon_6.2.0.21487_aarch64_setup.tar.gz \
-    && tar -xzvf pylon*.tar.gz \
-    && mkdir /opt/pylon \
-    && tar -C /opt/pylon -xzf ./pylon_*_aarch64.tar.gz \
-    && chmod 755 /opt/pylon \
-    #&& ./opt/pylon/share/pylon/setup-usb.sh \
-    && rm -r pylon* ; fi
-
-# CMD ["sh", "-c", "echo \"/opt/pylon/bin/pylon-setup-env.sh\" >> /root/.bashrc && ldconfig"]
