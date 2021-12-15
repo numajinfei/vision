@@ -43,6 +43,6 @@ jobs:
         with:
           context: .
           file: ./Dockerfile/ros_opencv.Dockerfile
-          platform: linux/amd64,linux/arm64
+          platforms: linux/amd64,linux/arm64
           push: true
           tags: jadehu/ros2_opencv
