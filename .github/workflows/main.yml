@@ -32,7 +32,7 @@ jobs:
         id: changed-files
         uses: tj-actions/changed-files@v2.0.0
         with:
-          files: ./Dockerfile/ros_opencv.Dockerfile
+          files: Dockerfile/ros_opencv.Dockerfile
 
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v1
@@ -88,17 +88,15 @@ jobs:
           password: ${{ secrets.DOCKER_HUB_ACCESS_TOKEN}}
 
       - name: Build and push
-        # if: steps.changed-files.outputs.any_changed == 'true'
         if: steps.changed-files-specific.outputs.any_changed == 'true'
-        run: echo "One or more files listed above has changed." 
-          
-        #uses: docker/build-push-action@v2
-        #with:
-        #  context: .
-        #  file: ./Dockerfile/ros_basler.Dockerfile
-        #  platforms: linux/amd64,linux/arm64
-        #  push: true
-        #  tags: ${{ secrets.DOCKER_HUB_USERNAME}}/ros2_basler
+        #run: echo "One or more files listed above has changed."           
+        uses: docker/build-push-action@v2
+        with:
+          context: .
+          file: ./Dockerfile/ros_basler.Dockerfile
+          platforms: linux/amd64,linux/arm64
+          push: true
+          tags: ${{ secrets.DOCKER_HUB_USERNAME}}/ros2_basler
           
   build-ros-galaxy:
     name: Build ros galaxy
@@ -114,7 +112,7 @@ jobs:
         id: changed-files
         uses: tj-actions/changed-files@v2.0.0
         with:
-          files: ./Dockerfile/ros_galaxy.Dockerfile
+          files: Dockerfile/ros_galaxy.Dockerfile
 
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v1
