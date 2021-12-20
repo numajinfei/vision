@@ -9,7 +9,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
   wget \
   && rm -rf /var/lib/apt/lists/*
 
-# Install daheng galaxy
+# Install Daheng galaxy
 RUN if [ "$TARGETPLATFORM" = "linux/amd64" ]; then \
   wget -O galaxy.tar.gz http://gb.daheng-imaging.com/EN/Software/Cameras/Linux/Galaxy_Linux-x86_Gige-U3_32bits-64bits_1.2.2107.9261.tar.gz \
   && tar -xzf galaxy.tar.gz \
