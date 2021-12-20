@@ -108,8 +108,8 @@ jobs:
         with:
           fetch-depth: 2
           
-      - name: Get changed files
-        id: changed-files
+      - name: Get specific changed files
+        id: changed-files-specific
         uses: tj-actions/changed-files@v2.0.0
         with:
           files: Dockerfile/ros_galaxy.Dockerfile
@@ -129,7 +129,6 @@ jobs:
 
       - name: Build and push
         if: steps.changed-files-specific.outputs.any_changed == 'true'
-
         uses: docker/build-push-action@v2
         with:
           context: .
@@ -148,11 +147,12 @@ jobs:
         with:
           fetch-depth: 2
           
-      - name: Get changed files
-        id: changed-files
+      - name: Get specific changed files
+        id: changed-files-specific
         uses: tj-actions/changed-files@v2.0.0
         with:
-          files: Dockerfile/ros_build.Dockerfile
+          files: |
+            Dockerfile/ros_build.Dockerfile
 
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v1
@@ -168,7 +168,7 @@ jobs:
           password: ${{ secrets.DOCKER_HUB_ACCESS_TOKEN}}
 
       - name: Build and push
-        if: steps.changed-files.outputs.any_changed == 'true'
+        if: steps.changed-files-specific.outputs.any_changed == 'true'
         uses: docker/build-push-action@v2
         with:
           context: .

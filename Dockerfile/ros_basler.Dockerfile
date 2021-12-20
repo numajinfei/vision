@@ -28,7 +28,5 @@ RUN if [ "$TARGETPLATFORM" = "linux/arm64" ]; then \
     && echo "/opt/pylon/lib" >> /etc/ld.so.conf.d/Pylon.conf \
     && ldconfig; fi
     
-    
 
-#CMD ["sh", "-c", "echo \"/opt/pylon/bin/pylon-setup-env.sh\" >> ~/.bashrc && ldconfig"]
 
