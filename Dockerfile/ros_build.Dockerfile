@@ -1,5 +1,6 @@
 FROM jadehu/ros2_opencv AS opencv
 FROM jadehu/ros2_basler AS basler
+FROM jadehu/ros2_galaxy AS galaxy
 FROM jadehu/ros2_pcl
 LABEL maintainer="numajinfei@163.com"
 
@@ -48,3 +49,6 @@ COPY --from=opencv/opt/opencv /opt/opencv
 
 # Install basler
 COPY --from=basler /opt/pylon /opt/pylon
+
+# Install galaxy
+COPY --from=galaxy /opt/Galaxy_camera /opt/GALAXY

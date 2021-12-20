@@ -16,7 +16,7 @@ RUN if [ "$TARGETPLATFORM" = "linux/amd64" ]; then \
     && mkdir /opt/pylon \
     && tar -C /opt/pylon -xzf ./pylon_*_x86_64.tar.gz \
     && rm -r pylon* \
-    && echo /opt/pylon/lib" >> /etc/ld.so.conf.d/Pylon.conf \
+    && echo "/opt/pylon/lib" >> /etc/ld.so.conf.d/Pylon.conf \
     && ldconfig; fi
 
 RUN if [ "$TARGETPLATFORM" = "linux/arm64" ]; then \
@@ -25,7 +25,7 @@ RUN if [ "$TARGETPLATFORM" = "linux/arm64" ]; then \
     && mkdir /opt/pylon \
     && tar -C /opt/pylon -xzf ./pylon_*_aarch64.tar.gz \
     && rm -r pylon* \
-    && echo /opt/pylon/lib" >> /etc/ld.so.conf.d/Pylon.conf \
+    && echo "/opt/pylon/lib" >> /etc/ld.so.conf.d/Pylon.conf \
     && ldconfig; fi
     
     
