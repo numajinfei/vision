@@ -72,7 +72,7 @@ jobs:
         uses: tj-actions/changed-files@v2.0.0
         with:
           files: |
-            ./Dockerfile/ros_basler.Dockerfile
+            Dockerfile/ros_basler.Dockerfile
 
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v1
