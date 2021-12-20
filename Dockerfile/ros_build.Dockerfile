@@ -46,7 +46,7 @@ RUN wget -O paho.mqtt.cpp.tar.gz https://github.com/eclipse/paho.mqtt.cpp/archiv
   && rm -r paho.mqtt.cpp-1.2.0 build
 
 # Install opencv
-COPY --from=opencv/opt/opencv /opt/opencv
+COPY --from=opencv /opt/opencv /opt/opencv
 
 # Install basler
 COPY --from=basler /opt/pylon /opt/pylon
