@@ -210,9 +210,9 @@ jobs:
           password: ${{ secrets.DOCKER_HUB_ACCESS_TOKEN }}
 
       - name: Build and push
-        if: steps.changed-files-specific.outputs.any_changed == 'true'
-        uses: docker/build-push-action@v2
         needs: [build_ros_basler, build_ros_galaxy, build_ros_pcl, build_ros_opencv, build_ros_opencv]
+        if: steps.changed-files-specific.outputs.any_changed == 'true'
+        uses: docker/build-push-action@v2        
         with:
           context: .
           file: ./Dockerfile/ros_build.Dockerfile
