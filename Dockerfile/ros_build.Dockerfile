@@ -1,7 +1,7 @@
 FROM jadehu/ros2_opencv AS opencv
 FROM jadehu/ros2_basler AS basler
 FROM jadehu/ros2_galaxy AS galaxy
-FROM jadehu/ros2_pcl
+FROM jadehu/ros2_pcl AS pcl
 LABEL maintainer="numajinfei@163.com"
 
 
@@ -10,7 +10,7 @@ LABEL maintainer="numajinfei@163.com"
 RUN apt-get update && apt-get install -y --no-install-recommends \
   wget \
   libgpiod-dev \
-  vim \
+  #vim \
   && rm -rf /var/lib/apt/lists/*
 
 # Install nlohmann json
@@ -58,4 +58,4 @@ COPY --from=galaxy /opt/Galaxy_camera /opt/GALAXY
 COPY --from=galaxy /etc/ld.so.conf.d/Galaxy_camera.conf /etc/ld.so.conf.d/Galaxy_camera.conf
 
 # Copy pcl ld config file
-COPY --from=pcl /etc/ld.so.conf.d/Pcl.conf /etc/ld.so.conf.d/Pcl.conf
+COPY --from=jadehu/ros2_pcl /etc/ld.so.conf.d/Pcl.conf /etc/ld.so.conf.d/Pcl.conf
