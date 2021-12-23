@@ -178,8 +178,8 @@ jobs:
   build-ros-build:
     name: Build ros build
     runs-on: ubuntu-20.04
-    needs: [build_ros_basler, build_ros_galaxy, build_ros_pcl, build_ros_opencv, build_ros_opencv]
-    
+    needs: [build-ros-basler, build-ros-galaxy, build-ros-pcl, build-ros-opencv, build-ros-opencv]
+
     steps:
       - name: Check-out repository
         uses: actions/checkout@v2
