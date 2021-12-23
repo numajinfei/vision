@@ -47,9 +47,15 @@ RUN wget -O paho.mqtt.cpp.tar.gz https://github.com/eclipse/paho.mqtt.cpp/archiv
 
 # Install opencv
 COPY --from=opencv /opt/opencv /opt/opencv
+COPY --from=opencv /etc/ld.so.conf.d/OpenCV.conf /etc/ld.so.conf.d/OpenCV.conf
 
 # Install basler
 COPY --from=basler /opt/pylon /opt/pylon
+COPY --from=basler /etc/ld.so.conf.d/Pylon.conf /etc/ld.so.conf.d/Pylon.conf
 
 # Install galaxy
 COPY --from=galaxy /opt/Galaxy_camera /opt/GALAXY
+COPY --from=galaxy /etc/ld.so.conf.d/Galaxy_camera.conf /etc/ld.so.conf.d/Galaxy_camera.conf
+
+# Copy pcl ld config file
+COPY --from=pcl /etc/ld.so.conf.d/Pcl.conf /etc/ld.so.conf.d/Pcl.conf
