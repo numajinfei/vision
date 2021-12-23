@@ -10,7 +10,6 @@ LABEL maintainer="numajinfei@163.com"
 RUN apt-get update && apt-get install -y --no-install-recommends \
   wget \
   libgpiod-dev \
-  #vim \
   && rm -rf /var/lib/apt/lists/*
 
 # Install nlohmann json
