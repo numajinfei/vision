@@ -44,6 +44,8 @@ RUN wget -O paho.mqtt.cpp.tar.gz https://github.com/eclipse/paho.mqtt.cpp/archiv
     -B build/ \
   && cmake --build build/ --target install \
   && echo "/opt/mqtt/lib" >> /etc/ld.so.conf.d/mqtt.conf \
+  && mkdir -p /opt/mqtt/lib \
+  && cp /usr/local/lib/libpaho* /opt/mqtt/lib \
   && rm -r paho.mqtt.cpp-1.2.0 build
 
 # Install opencv
@@ -62,4 +64,4 @@ COPY --from=galaxy /etc/ld.so.conf.d/Galaxy_camera.conf /etc/ld.so.conf.d/Galaxy
 COPY --from=jadehu/ros2_pcl /etc/ld.so.conf.d/Pcl.conf /etc/ld.so.conf.d/Pcl.conf
 
 # Copy mqtt 
-COPY /usr/local/lib/libpaho* /opt/mqtt/lib/
+#COPY /usr/local/lib/libpaho* /opt/mqtt/lib/
