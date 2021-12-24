@@ -221,7 +221,7 @@ jobs:
           tags: ${{ secrets.DOCKER_HUB_USERNAME }}/ros2_build 
           
   test_ros-contain-basler:
-    name: Build ros build
+    name: Test ros contain basler
     runs-on: ubuntu-20.04
     needs: [build-ros-build]
 

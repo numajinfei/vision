@@ -43,7 +43,7 @@ RUN wget -O paho.mqtt.cpp.tar.gz https://github.com/eclipse/paho.mqtt.cpp/archiv
     -S paho.mqtt.cpp-1.2.0/ \
     -B build/ \
   && cmake --build build/ --target install \
-  && echo "/opt/mqtt/lib" >> /etc/ld.so.conf.d/mqtt.conf 
+  && echo "/opt/mqtt/lib" >> /etc/ld.so.conf.d/mqtt.conf \
   && rm -r paho.mqtt.cpp-1.2.0 build
 
 # Install opencv
