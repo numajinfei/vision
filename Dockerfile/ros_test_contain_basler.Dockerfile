@@ -1,13 +1,13 @@
-FROM jadehu/ros2_build AS build
+FROM jadehu/ros2_build AS ros2_build
 LABEL maintainer="numajinfei@163.com"
 
 COPY ./src ./ws/src
 COPY ./script ./script/
 
-COPY --from=build /etc/ld.so.conf.d/Pylon.conf /etc/ld.so.conf.d/Pylon.conf
-COPY --from=build /etc/ld.so.conf.d/OpenCV.conf /etc/ld.so.conf.d/OpenCV.conf
-COPY --from=build /etc/ld.so.conf.d/Pcl.conf /etc/ld.so.conf.d/Pcl.conf
-COPY --from=build /etc/ld.so.conf.d/mqtt.conf /etc/ld.so.conf.d/mqtt.conf
+COPY --from=ros2_build /etc/ld.so.conf.d/Pylon.conf /etc/ld.so.conf.d/Pylon.conf
+COPY --from=ros2_build /etc/ld.so.conf.d/OpenCV.conf /etc/ld.so.conf.d/OpenCV.conf
+COPY --from=ros2_build /etc/ld.so.conf.d/Pcl.conf /etc/ld.so.conf.d/Pcl.conf
+COPY --from=ros2_build /etc/ld.so.conf.d/mqtt.conf /etc/ld.so.conf.d/mqtt.conf
 
 WORKDIR ./ws
 
