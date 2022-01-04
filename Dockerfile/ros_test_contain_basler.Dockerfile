@@ -4,10 +4,10 @@ LABEL maintainer="numajinfei@163.com"
 COPY ./src ./ws/src
 COPY ./script ./script/
 
-COPY --from=ros2_build /etc/ld.so.conf.d/Pylon.conf /etc/ld.so.conf.d/Pylon.conf
-COPY --from=ros2_build /etc/ld.so.conf.d/OpenCV.conf /etc/ld.so.conf.d/OpenCV.conf
-COPY --from=ros2_build /etc/ld.so.conf.d/Pcl.conf /etc/ld.so.conf.d/Pcl.conf
-COPY --from=ros2_build /etc/ld.so.conf.d/mqtt.conf /etc/ld.so.conf.d/mqtt.conf
+COPY --from=jadehu/ros2_build /etc/ld.so.conf.d/Pylon.conf /etc/ld.so.conf.d/Pylon.conf
+COPY --from=jadehu/ros2_build /etc/ld.so.conf.d/OpenCV.conf /etc/ld.so.conf.d/OpenCV.conf
+COPY --from=jadehu/ros2_build /etc/ld.so.conf.d/Pcl.conf /etc/ld.so.conf.d/Pcl.conf
+COPY --from=jadehu/ros2_build /etc/ld.so.conf.d/mqtt.conf /etc/ld.so.conf.d/mqtt.conf
 
 WORKDIR ./ws
 
