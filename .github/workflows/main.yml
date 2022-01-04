@@ -220,7 +220,7 @@ jobs:
           push: true
           tags: ${{ secrets.DOCKER_HUB_USERNAME }}/ros2_build 
           
-  test_ros-contain-basler:
+  test-ros-contain-basler:
     name: Test ros contain basler
     runs-on: ubuntu-20.04
     needs: [build-ros-build]
@@ -261,8 +261,8 @@ jobs:
           push: true
           tags: ${{ secrets.DOCKER_HUB_USERNAME }}/ros2_test_contain_basler1 
 
-  test_ros-contain-galaxy:
-    name: Test ros contain basler
+  test-ros-contain-galaxy:
+    name: Test ros contain galaxy
     runs-on: ubuntu-20.04
     needs: [build-ros-build]
 

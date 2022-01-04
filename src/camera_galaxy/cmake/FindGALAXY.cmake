@@ -45,10 +45,13 @@ The following cache variables may also be set:
 # Find the include path which includes inc/GxIAPI.h
 find_path(GALAXY_INCLUDE_DIR
   NAMES "GxIAPI.h"
-  HINTS "/opt/Galaxy_camera/inc/"
+  #HINTS "/opt/Galaxy_camera/inc/"
+  HINTS "/opt/GALAXY/inc"
   DOC "The directory containing GxIAPI.h."
 )
-
+if(NOT GALAXY_INCLUDE_DIR)
+  set(GALAXY_INCLUDE_DIR "/opt/GALAXY/inc")
+endif()
 # Find the specific libary under <prefix>/lib/[x64|x86]/
 if(WIN32)
   if(CMAKE_SIZEOF_VOID_P EQUAL 8)
@@ -63,7 +66,9 @@ find_library(GALAXY_LIBRARY
   NAMES "gxiapi"
   DOC "The path to the GxIAPI library."
 )
-
+if(NOT GALAXY_LIBRARY)
+  set(GALAXY_LIBRARY "/opt/GALAXY/lib/armv8/libgxiapi.so")
+endif()
 unset(CMAKE_LIBRARY_ARCHITECTURE)
 
 # Extract version information
