@@ -178,7 +178,7 @@ jobs:
   build-ros-build:
     name: Build ros build
     runs-on: ubuntu-20.04
-    needs: [build-ros-basler, build-ros-galaxy, build-ros-pcl, build-ros-opencv, build-ros-opencv]
+    needs: [build-ros-basler, build-ros-galaxy, build-ros-pcl, build-ros-opencv]
 
     steps:
       - name: Check-out repository
@@ -229,7 +229,7 @@ jobs:
       - name: Check-out repository
         uses: actions/checkout@v2
         with:
-          submodules: recursive
+          #submodules: recursive
           fetch-depth: 2
        
       #- name: Check if submodule is on most recent master commit
@@ -259,4 +259,4 @@ jobs:
           file: ./Dockerfile/ros_test_contain_basler.Dockerfile
           platforms: linux/amd64,linux/arm64
           push: true
-          tags: ${{ secrets.DOCKER_HUB_USERNAME }}/ros2_test_contain_basler 
+          tags: ${{ secrets.DOCKER_HUB_USERNAME }}/ros2_test_contain_basler1 
