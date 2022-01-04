@@ -4,13 +4,14 @@ FROM jadehu/ros2_galaxy AS galaxy
 FROM jadehu/ros2_pcl AS pcl
 LABEL maintainer="numajinfei@163.com"
 
-
+FROM ros:galactic
 
 # Install dependencies
 RUN apt-get update && apt-get install -y --no-install-recommends \
   wget \
   vim \
   libgpiod-dev \
+  ros-galactic-pcl-conversions \
   && rm -rf /var/lib/apt/lists/*
 
 # Install nlohmann json
