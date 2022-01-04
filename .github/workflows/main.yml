@@ -232,12 +232,12 @@ jobs:
           submodules: recursive
           fetch-depth: 2
        
-      - name: Check if submodule is on most recent master commit
-        uses: jtmullen/submodule-branch-check-action@v1
-        with:
-          path: "src"
-          branch: "dev-binocular"
-          require_head: true
+      #- name: Check if submodule is on most recent master commit
+      #  uses: jtmullen/submodule-branch-check-action@v1
+      #  with:
+      #    path: "src"
+      #    branch: "dev-binocular"
+      #    require_head: true
 
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v1

@@ -1,0 +1,11 @@
+[Unit]
+Description="ROS2 env: usbfs"
+PartOf=ros2_manage.service
+After=ros2_manage.service
+
+[Service]
+Type=oneshot
+ExecStart=/bin/bash -c "echo 1024 > /sys/module/usbcore/parameters/usbfs_memory_mb"
+
+[Install]
+WantedBy=ros2_manage.service

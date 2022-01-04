@@ -1,0 +1,16 @@
+[Unit]
+Description="ROS2 node: gpio_raspberry"
+PartOf=ros2_manage.service
+After=ros2_manage.service
+
+[Service]
+User=ubuntu
+Type=simple
+WorkingDirectory=/home/ubuntu/ws
+ExecStart=/bin/bash -c "source install/setup.bash;ros2 run gpio_raspberry gpio_raspberry_node --ros-args --params-file install/gpio_raspberry/share/gpio_raspberry/config/params.yaml"
+KillSignal=SIGINT
+Restart=on-failure
+RestartSec=30
+
+[Install]
+WantedBy=ros2_manage.service
