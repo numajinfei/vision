@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.5)
-project(mqtt_ros)
+project(gpio_raspberry)
 
 # Default to C99
 if(NOT CMAKE_C_STANDARD)
@@ -19,17 +19,26 @@ endif()
 find_package(ament_cmake REQUIRED)
 find_package(rclcpp REQUIRED)
 find_package(rclcpp_components REQUIRED)
-find_package(PahoMqttCpp REQUIRED)
+find_package(std_srvs REQUIRED)
 
-add_library(mqtt_ros SHARED src/mqtt_ros.cpp)
+add_library(gpio_raspberry SHARED src/gpio_raspberry.cpp)
 
-target_include_directories(mqtt_ros PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include> $<INSTALL_INTERFACE:include>)
+target_include_directories(gpio_raspberry
+  PUBLIC
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+    $<INSTALL_INTERFACE:include>
+)
+target_link_libraries(gpio_raspberry gpiod)
+ament_target_dependencies(gpio_raspberry
+  rclcpp
+  rclcpp_components
+  std_srvs
+)
 
-ament_target_dependencies(mqtt_ros rclcpp rclcpp_components)
-
-target_link_libraries(mqtt_ros PahoMqttCpp::paho-mqttpp3)
-
-rclcpp_components_register_node(mqtt_ros PLUGIN "mqtt_ros::MqttRos" EXECUTABLE mqtt_ros_node)
+rclcpp_components_register_node(gpio_raspberry
+  PLUGIN "gpio_raspberry::GpioRaspberry"
+  EXECUTABLE gpio_raspberry_node
+)
 
 if(BUILD_TESTING)
   find_package(ament_lint_auto REQUIRED)
@@ -42,12 +51,11 @@ if(BUILD_TESTING)
   ament_lint_auto_find_test_dependencies()
 endif()
 
-install(TARGETS mqtt_ros EXPORT export_mqtt_ros DESTINATION lib)
+install(TARGETS gpio_raspberry EXPORT export_gpio_raspberry DESTINATION lib)
 install(DIRECTORY include/ DESTINATION include)
 install(DIRECTORY launch DESTINATION share/${PROJECT_NAME})
 install(DIRECTORY config DESTINATION share/${PROJECT_NAME})
 
-ament_export_targets(export_mqtt_ros HAS_LIBRARY_TARGET)
+ament_export_targets(export_gpio_raspberry HAS_LIBRARY_TARGET)
 
 ament_package()
-

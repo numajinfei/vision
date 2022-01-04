@@ -1,0 +1,76 @@
+camera_basler_node:
+  ros__parameters:
+    serial_number_enable: false            #boolean
+    camera_number: 1                      #const int 
+    camera_1_serial_number: "40138314"            #string
+    camera_2_serial_number: "40136629"            #string  
+    hardware_trigger_source: "Line4"      #string(Line1,2,3,4)
+    hardware_trigger_edge: "AnyEdge"      #string(RisingEdge,FallingEdge,AnyEdge,LevelHigh,LevelLow)
+
+    acqusition_buffer_number: 300         #int
+    acqusition_mode: "Continuous"         #string(SingleFrame,Continuous)
+    acqusition_frame_rate: 60.            #float
+    exposure_time: 500.                   #float
+
+    offsetX: 0                            #int
+    offsetY: 0                            #int
+    width: 800                           #int
+    height: 600                          #int
+
+    pixel_format : "Mono8"                 #string
+
+    reverseX : 0                          #int
+    reverseY : 0                          #int
+
+camera_basler_node_l:
+  ros__parameters:
+    serial_number_enable: false            #boolean
+    camera_number: 1                      #const int 
+    # camera_serial_number: "40146421"            #string
+    camera_serial_number: "40138314"            #string
+    # camera_2_serial_number: "40136629"            #string  
+    hardware_trigger_source: "Line4"      #string(Line1,2,3,4)
+    hardware_trigger_edge: "RisingEdge"      #string(RisingEdge,FallingEdge,AnyEdge,LevelHigh,LevelLow)
+
+    acqusition_buffer_number: 300         #int
+    acqusition_mode: "Continuous"         #string(SingleFrame,Continuous)
+    acqusition_frame_rate: 60.            #float
+    exposure_time: 1000.                   #float
+
+    offsetX: 8                            #int
+    offsetY: 8                            #int
+    width: 1920                           #int
+    height: 1200                           #int
+
+    pixel_format : "Mono8"                 #string
+
+    reverseX : 1                          #int
+    reverseY : 1                          #int
+
+    save_path : "/home/ubuntu/http_server/imagel.bmp"  #string
+
+camera_basler_node_r:
+  ros__parameters:
+    serial_number_enable: false            #boolean
+    camera_number: 1                      #const int 
+    # camera_1_serial_number: "40138314"            #string
+    camera_serial_number: "40136629"            #string  
+    hardware_trigger_source: "Line4"      #string(Line1,2,3,4)
+    hardware_trigger_edge: "RisingEdge"      #string(RisingEdge,FallingEdge,AnyEdge,LevelHigh,LevelLow)
+
+    acqusition_buffer_number: 300         #int
+    acqusition_mode: "Continuous"         #string(SingleFrame,Continuous)
+    acqusition_frame_rate: 60.            #float
+    exposure_time: 1000.                   #float
+
+    offsetX: 8                            #int
+    offsetY: 8                            #int
+    width: 1920                           #int
+    height: 1200                           #int
+
+    pixel_format : "Mono8"                 #string
+
+    reverseX : 0                          #int
+    reverseY : 0                          #int
+
+    save_path : "/home/ubuntu/http_server/imager.bmp"  #string
