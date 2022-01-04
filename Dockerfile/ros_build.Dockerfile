@@ -58,10 +58,10 @@ COPY --from=basler /etc/ld.so.conf.d/Pylon.conf /etc/ld.so.conf.d/Pylon.conf
 
 # Install galaxy
 COPY --from=galaxy /opt/Galaxy_camera /opt/GALAXY
-COPY --from=galaxy /etc/ld.so.conf.d/Galaxy_camera.conf /etc/ld.so.conf.d/Galaxy_camera.conf
+COPY --from=galaxy /etc/ld.so.conf.d/GALAXY.conf /etc/ld.so.conf.d/GALAXY.conf
 
 # Copy pcl ld config file
-COPY --from=jadehu/ros2_pcl /etc/ld.so.conf.d/Pcl.conf /etc/ld.so.conf.d/Pcl.conf
+COPY --from=pcl /etc/ld.so.conf.d/Pcl.conf /etc/ld.so.conf.d/Pcl.conf
 
 # Copy mqtt 
 #COPY /usr/local/lib/libpaho* /opt/mqtt/lib/

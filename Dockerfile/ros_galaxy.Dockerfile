@@ -17,7 +17,7 @@ RUN if [ "$TARGETPLATFORM" = "linux/amd64" ]; then \
   && (printf "\nY\nEn\n" && cat) | ./Galaxy_Linux-x86_Gige-U3_32bits-64bits_1.2.2107.9261/Galaxy_camera.run \
   && rm -r Galaxy_Linux-x86_Gige-U3_32bits-64bits_1.2.2107.9261 \
   && mv Galaxy_camera/ /opt \
-  && echo "/opt/Galaxy_camera/lib" >> /etc/ld.so.conf.d/Galaxy_camera.conf \
+  && echo "/opt/GALAXY/lib" >> /etc/ld.so.conf.d/GALAXY.conf \
   && ldconfig; fi
 
 RUN if [ "$TARGETPLATFORM" = "linux/arm64" ]; then \
@@ -27,5 +27,5 @@ RUN if [ "$TARGETPLATFORM" = "linux/arm64" ]; then \
   && (printf "\nY\nEn\n" && cat) | ./Galaxy_Linux-armhf_Gige-U3_32bits-64bits_1.3.2107.9261/Galaxy_camera.run \
   && rm -r Galaxy_Linux-armhf_Gige-U3_32bits-64bits_1.3.2107.9261 \
   && mv Galaxy_camera/ /opt \
-  && echo "/opt/Galaxy_camera/lib" >> /etc/ld.so.conf.d/Galaxy_camera.conf \
+  && echo "/opt/GALAXY/lib" >> /etc/ld.so.conf.d/GALAXY.conf \
   && ldconfig; fi
