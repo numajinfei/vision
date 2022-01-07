@@ -53,23 +53,42 @@ if(NOT GALAXY_INCLUDE_DIR)
   set(GALAXY_INCLUDE_DIR "/opt/GALAXY/inc")
 endif()
 # Find the specific libary under <prefix>/lib/[x64|x86]/
-if(WIN32)
+#if(WIN32)
   if(CMAKE_SIZEOF_VOID_P EQUAL 8)
     set(CMAKE_LIBRARY_ARCHITECTURE x64)
   else()
     set(CMAKE_LIBRARY_ARCHITECTURE x86)
   endif()
+#endif()
+
+# Get the specific hardware platform under <prefix>/lib/[platform]/
+if(CMAKE_SYSTEM_NAME MATCHES "Linux")
+  message(STATUS "current platform: Linux")
+  message(STATUS "--> ${CMAKE_HOST_SYSTEM_PROCESSOR}")
+
+  if(CMAKE_HOST_SYSTEM_PROCESSOR STREQUAL "aarch64")
+    set(PLATFORM armv8)
+  elseif(CMAKE_HOST_SYSTEM_PROCESSOR STREQUAL "x86_64")
+    set(PLATFORM x86_64)
+  else()
+    message(STATUS "Host platform is: ${CMAKE_HOST_SYSTEM_PROCESSOR}")
+  endif()
+else()
+  message(STATUS "Host system is: ${CMAKE_SYSTEM_NAME}")
 endif()
 
 # Find the specific libary
 find_library(GALAXY_LIBRARY
   NAMES "gxiapi"
+  HINTS "/opt/GALAXY/lib/${PLATFORM}"
   DOC "The path to the GxIAPI library."
 )
-if(NOT GALAXY_LIBRARY)
-  set(GALAXY_LIBRARY "/opt/GALAXY/lib/armv8/libgxiapi.so")
-endif()
+
+#if(NOT GALAXY_LIBRARY)
+#  set(GALAXY_LIBRARY "/opt/GALAXY/lib/armv8/libgxiapi.so")
+#endif()
 unset(CMAKE_LIBRARY_ARCHITECTURE)
+unset(PLATFORM)
 
 # Extract version information
 file(STRINGS "${GALAXY_INCLUDE_DIR}/GxIAPI.h" GALAXY_VERSION REGEX "@Version")

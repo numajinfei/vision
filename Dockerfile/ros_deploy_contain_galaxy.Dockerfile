@@ -8,6 +8,11 @@ COPY --from=test /opt/GALAXY/lib /opt/GALAXY/lib/
 COPY --from=test /opt/opencv/lib /opt/opencv/lib/
 COPY --from=test /ws/install /ws/install
 
+COPY --from=test /etc/ld.so.conf.d/GALAXY.conf /etc/ld.so.conf.d/GALAXY.conf
+COPY --from=test /etc/ld.so.conf.d/OpenCV.conf /etc/ld.so.conf.d/OpenCV.conf
+COPY --from=test /etc/ld.so.conf.d/Pcl.conf /etc/ld.so.conf.d/Pcl.conf
+COPY --from=test /etc/ld.so.conf.d/mqtt.conf /etc/ld.so.conf.d/mqtt.conf
+
 
 COPY ./script ./
 # Install dependencies
