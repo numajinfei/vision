@@ -259,7 +259,7 @@ jobs:
           file: ./Dockerfile/ros_test_contain_basler.Dockerfile
           platforms: linux/amd64,linux/arm64
           push: true
-          tags: ${{ secrets.DOCKER_HUB_USERNAME }}/ros2_test_contain_basler1 
+          tags: ${{ secrets.DOCKER_HUB_USERNAME }}/ros2_test_contain_basler
 
   test-ros-contain-galaxy:
     name: Test ros contain galaxy

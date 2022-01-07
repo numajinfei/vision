@@ -1,4 +1,4 @@
-FROM jadehu/ros2_test AS test
+FROM jadehu/ros2_test_contain_basler AS test
 LABEL maintainer=numajinfei@163.com
 
 FROM ros:galactic
@@ -7,6 +7,11 @@ COPY --from=test /usr/local/lib/libpaho* /opt/mqtt/lib/
 COPY --from=test /opt/pylon/lib /opt/pylon/lib/
 COPY --from=test /opt/opencv/lib /opt/opencv/lib/
 COPY --from=test /ws/install /ws/install
+
+COPY --from=test /etc/ld.so.conf.d/Pylon.conf /etc/ld.so.conf.d/Pylon.conf
+COPY --from=test /etc/ld.so.conf.d/OpenCV.conf /etc/ld.so.conf.d/OpenCV.conf
+COPY --from=test /etc/ld.so.conf.d/Pcl.conf /etc/ld.so.conf.d/Pcl.conf
+COPY --from=test /etc/ld.so.conf.d/mqtt.conf /etc/ld.so.conf.d/mqtt.conf
 
 
 COPY ./script ./
