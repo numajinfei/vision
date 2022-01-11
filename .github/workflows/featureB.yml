@@ -1,0 +1,93 @@
+# This is a basic workflow to help you get started with Actions
+
+name: featureB test and deploy' actions 
+
+# Controls when the workflow will run
+on:
+  # Triggers the workflow on push or pull request events but only for the master branch
+  push:
+    branches: [ featureB ]
+  pull_request:
+    branches: [ featureB ]
+
+  # Allows you to run this workflow manually from the Actions tab
+  #workflow_dispatch:
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:          
+  featureB-test-ros:
+    name: FeatureB test ros
+    runs-on: ubuntu-20.04
+    #needs: [build-ros-build]
+
+    steps:
+      - name: Check-out repository
+        uses: actions/checkout@v2
+        with:
+          #submodules: recursive
+          ref: featureB
+          #fetch-depth: 2
+       
+      #- name: Check if submodule is on most recent master commit
+      #  uses: jtmullen/submodule-branch-check-action@v1
+      #  with:
+      #    path: "src"
+      #    branch: "dev-binocular"
+      #    require_head: true
+
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v1
+        
+      - name: Set up Docker Buildx
+        id: buildx
+        uses: docker/setup-buildx-action@v1
+
+      - name: Login to DockerHub
+        uses: docker/login-action@v1
+        with:
+          username: ${{ secrets.DOCKER_HUB_USERNAME }}
+          password: ${{ secrets.DOCKER_HUB_ACCESS_TOKEN }}
+
+      - name: Build and push                  
+        uses: docker/build-push-action@v2        
+        with:
+          context: .
+          file: ./Dockerfile/ros_featureB_test.Dockerfile
+          platforms: linux/amd64,linux/arm64
+          push: true
+          tags: ${{ secrets.DOCKER_HUB_USERNAME }}/ros2_feature_b_test 
+          
+  featureB-deploy-ros:
+    name: FeatureB deploy ros
+    runs-on: ubuntu-20.04
+    needs: [featureB-test-ros]
+
+    steps:
+      - name: Check-out repository
+        uses: actions/checkout@v2
+        with:     
+          ref: featureB     
+          #fetch-depth: 2
+
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v1
+        
+      - name: Set up Docker Buildx
+        id: buildx
+        uses: docker/setup-buildx-action@v1
+
+      - name: Login to DockerHub
+        uses: docker/login-action@v1
+        with:
+          username: ${{ secrets.DOCKER_HUB_USERNAME }}
+          password: ${{ secrets.DOCKER_HUB_ACCESS_TOKEN }}
+
+      - name: Build and push                  
+        uses: docker/build-push-action@v2        
+        with:
+          context: .
+          file: ./Dockerfile/ros_featureB_deploy.Dockerfile
+          platforms: linux/amd64,linux/arm64
+          push: true
+          tags: ${{ secrets.DOCKER_HUB_USERNAME }}/ros2_feature_b_deploy
+
