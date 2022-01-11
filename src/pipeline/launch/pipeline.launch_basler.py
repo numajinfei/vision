@@ -23,14 +23,15 @@ def generate_launch_description():
     node1_1 = ComposableNode(
         package = 'camera_basler',
         plugin = 'camera_basler::CameraBasler',
-        name = 'camera_basler_node_l',
+        name = 'camera_node',
         parameters = [configParams1_1],
+        #remappings = [('~/image', '/camera_basler_node_l/image_r')],
         extra_arguments=[{'use_intra_process_comms': True}])
 
     node1_2 = ComposableNode(
         package = 'camera_basler',
         plugin = 'camera_basler::CameraBasler',
-        name = 'camera_basler_node_r',
+        name = 'camera_node_r',
         parameters = [configParams1_2],
         extra_arguments=[{'use_intra_process_comms': True}])
 
@@ -48,7 +49,7 @@ def generate_launch_description():
         package = 'laser_line_center',
         plugin='laser_line_center::LaserLineCenter',
         name = 'laser_line_center_node_l',
-        remappings = [('~/image', '/camera_basler_node_l/image_r')],
+        remappings = [('~/image', '/camera_node/image')],
         parameters = [configParams2_1],
         extra_arguments=[{'use_intra_process_comms': True}])
 
@@ -56,7 +57,7 @@ def generate_launch_description():
         package = 'laser_line_center',
         plugin='laser_line_center::LaserLineCenter',
         name = 'laser_line_center_node_r',
-        remappings = [('~/image', '/camera_basler_node_r/image_r')],
+        remappings = [('~/image', '/camera_node_r/image')],
         parameters = [configParams2_2],
         extra_arguments=[{'use_intra_process_comms': True}])
 

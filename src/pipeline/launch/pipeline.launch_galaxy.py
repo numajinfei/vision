@@ -21,6 +21,8 @@ def generate_launch_description():
         package = 'camera_galaxy',
         plugin = 'camera_galaxy::CameraGalaxy',
         parameters = [configParams1],
+        remappings = [('~/image_l', '/camera_node/image_l')],
+        remappings = [('~/image_r', '/camera_node/image_r')],
         extra_arguments=[{'use_intra_process_comms': True}])
 
     configFile2 = os.path.join(
@@ -37,7 +39,7 @@ def generate_launch_description():
         package = 'laser_line_center',
         plugin='laser_line_center::LaserLineCenter',
         name = 'laser_line_center_node_l',
-        remappings = [('~/image', '/camera_galaxy_node/image_l')],
+        remappings = [('~/image', '/camera_node/image_l')],
         parameters = [configParams2_1],
         extra_arguments=[{'use_intra_process_comms': True}])
 
@@ -45,7 +47,7 @@ def generate_launch_description():
         package = 'laser_line_center',
         plugin='laser_line_center::LaserLineCenter',
         name = 'laser_line_center_node_r',
-        remappings = [('~/image', '/camera_galaxy_node/image_r')],
+        remappings = [('~/image', '/camera_node/image_r')],
         parameters = [configParams2_2],
         extra_arguments=[{'use_intra_process_comms': True}])
 

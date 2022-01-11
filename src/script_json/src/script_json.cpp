@@ -17,6 +17,9 @@ bool EndsWith(const std::string& value, const std::string& ending)
 
 void CheckAndSend(rclcpp::Client<std_srvs::srv::Trigger>::SharedPtr ptr)
 {
+    if(ptr == nullptr)
+        return;
+
     auto t = std::make_shared<std_srvs::srv::Trigger::Request>();
 
     if(rclcpp::ok() && ptr->service_is_ready())
@@ -211,14 +214,16 @@ void ScriptJson::_Execute() try
 
     CheckAndSleep(5);
 
-    CheckAndSend(_map["/camera_galaxy_node/start"]);
+    CheckAndSend(_map["/camera_node/start"]);
+    CheckAndSend(_map["/camera_node_r/start"]);
 
     CheckAndSend(_map["/motor_encoder_node/scan"]);
 
     CheckAndSleep(25);
 
-    CheckAndSend(_map["/camera_galaxy_node/stop"]);
-
+    CheckAndSend(_map["/camera_node/stop"]);
+    CheckAndSend(_map["/camera_node_r/stop"]);
+    
     CheckAndSend(_map["/gpio_raspberry_node/low"]);
 	CheckAndSend(_map["/motor_encoder_node/zero"]);
 	CheckAndSleep(5); //=1s 

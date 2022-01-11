@@ -4,13 +4,17 @@
 
 namespace motor_encoder
 {
+void ReachCallback(int type)
+{
+    //std::cout << "Successful arrival" << type <<std::endl;
+}
 
 MotorEncoder::MotorEncoder(const rclcpp::NodeOptions& options) : Node("motor_encoder_node", options)
 {
     _InitializeParameters();
     _UpdateParameters();
 
-    _motorTmcl = std::make_unique<motor_tmcl::MotorTmcl>(nullptr,_pos_init,_direction_flag);
+    _motorTmcl = std::make_unique<motor_tmcl::MotorTmcl>(ReachCallback,_pos_init,_direction_flag);
     
     _srvScan = this->create_service<std_srvs::srv::Trigger>(_srvScanName, [this](const std::shared_ptr<std_srvs::srv::Trigger::Request>, std::shared_ptr<std_srvs::srv::Trigger::Response> response)
     {

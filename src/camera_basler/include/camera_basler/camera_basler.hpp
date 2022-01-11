@@ -4,7 +4,7 @@
  * @Author: hw
  * @Date: 2021-09-13 16:32:24
  * @LastEditors: hw
- * @LastEditTime: 2021-10-18 22:13:25
+ * @LastEditTime: 2022-01-11 14:53:49
  */
 #include "rclcpp/rclcpp.hpp"
 #include "std_srvs/srv/trigger.hpp"
@@ -86,7 +86,7 @@ private:
     // const char* _pubLName = "~/image_l";
     // rclcpp::Publisher<sensor_msgs::msg::Image>::SharedPtr _pubL;
 
-    const char* _pubRName = "~/image_r";
+    const char* _pubRName = "~/image";
     rclcpp::Publisher<sensor_msgs::msg::Image>::SharedPtr _pubR;    
 
     const char* _srvStartName = "~/start";

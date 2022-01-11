@@ -38,7 +38,7 @@ ros2 run motor_encoder motor_encoder_node --ros-args --params-file install/motor
 sleep 1
 ros2 run mqtt_ros mqtt_ros_node --ros-args --params-file install/mqtt_ros/share/mqtt_ros/config/params.yaml -r \~/request:=/mqtt_json_ros/request -r \~/response:=/mqtt_json_ros/response > ./ros2_log/mqtt_$current_time.log 2>&1 &
 sleep 2
-ros2 launch pipeline pipeline.launch.py > /ros2_log/pipeline_$current_time.log 2>&1 &
+ros2 launch pipeline pipeline.launch_galaxy.py > /ros2_log/pipeline_$current_time.log 2>&1 &
 sleep 3
 ros2 run script_json script_json_node --ros-args --params-file install/script_json/share/script_json/config/params.yaml -r \~/request:=/mqtt_json_ros/request -r \~/response:=/mqtt_json_ros/response -r \~/result:=/common/result > ./ros2_log/scriptjson_$current_time.log 2>&1 &
 
