@@ -1,26 +1,44 @@
+// Copyright 2019 Zhushi Tech, Inc.
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//     http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+
 #include "camera_galaxy/camera_galaxy.hpp"
 
 #include <exception>
+#include <memory>
 
 extern "C"
 {
     #include "GxIAPI.h"
 }
 
-using namespace std::chrono_literals;
-
 namespace camera_galaxy
 {
 
-void GX_STDC _OnFrameCallbackFun(GX_FRAME_CALLBACK_PARAM* pFrame) try
+using namespace std::chrono_literals;
+using sensor_msgs::msg::Image;
+using std_srvs::srv::Trigger;
+
+void GX_STDC _OnFrameCallbackFun(GX_FRAME_CALLBACK_PARAM * pFrame)
 {
-    if(pFrame->status != GX_FRAME_STATUS_SUCCESS)
-        throw std::runtime_error("Callback pFrame status error");
+  try {
+    if (pFrame->status != GX_FRAME_STATUS_SUCCESS) {
+      throw std::runtime_error("Callback pFrame status error");
+    }
 
-    auto node = static_cast<CameraGalaxy*>(pFrame->pUserParam);
-
-    auto ptrL = std::make_unique<sensor_msgs::msg::Image>();
-    auto ptrR = std::make_unique<sensor_msgs::msg::Image>();
+    auto node = static_cast<CameraGalaxy *>(pFrame->pUserParam);
+    auto ptrL = std::make_unique<Image>();
+    auto ptrR = std::make_unique<Image>();
     ptrL->header.stamp = ptrR->header.stamp = node->now();
     ptrL->header.frame_id = ptrR->header.frame_id = std::to_string(pFrame->nFrameID);
     auto h = ptrL->height = ptrR->height = pFrame->nHeight;
@@ -118,12 +136,12 @@ public:
     }
 
 private:
-    void _InitializeParameters()
-    {
-        _node->declare_parameter("acqusition_buffer_number");
-        _node->declare_parameter("acqusition_frame_rate");
-        _node->declare_parameter("exposure_time");
-    }
+  void _InitializeParameters()
+  {
+    _node->declare_parameter("acqusition_buffer_number", _acqusitionBufferNumber);
+    _node->declare_parameter("acqusition_frame_rate", _acqusitionFrameRate);
+    _node->declare_parameter("exposure_time", _exposureTime);
+  }
 
     void _UpdateParameters()
     {
@@ -173,24 +191,26 @@ private:
             std::this_thread::sleep_for(200ms);
         }
 
-        _StreamOff();
-    }
+    _StreamOff();
+  }
 
 private:
-    int _acqusitionBufferNumber = 300;  ///< Acqusition buffer number
-    double _acqusitionFrameRate = 85.;  ///< Acqusition frame rate
-    double _exposureTime        = 200.; ///< Exposure time: us
-    CameraGalaxy* _node;
-    GX_DEV_HANDLE _handle = NULL;
+  int _acqusitionBufferNumber = 300;    ///< Acqusition buffer number
+  double _acqusitionFrameRate = 85.;    ///< Acqusition frame rate
+  double _exposureTime = 200.;          ///< Exposure time: us
+  CameraGalaxy * _node;
+  GX_DEV_HANDLE _handle = NULL;
 };
 
-CameraGalaxy::CameraGalaxy(const rclcpp::NodeOptions& options) : Node("camera_galaxy_node", options)
+CameraGalaxy::CameraGalaxy(const rclcpp::NodeOptions & options)
+: Node("camera_galaxy_node", options)
 {
-    _init = std::thread(&CameraGalaxy::_Init, this);
+  _init = std::thread(&CameraGalaxy::_Init, this);
 }
 
 CameraGalaxy::~CameraGalaxy()
 {
+  try {
     _init.join();
 
     _srvStart.reset();
@@ -199,35 +219,45 @@ CameraGalaxy::~CameraGalaxy()
     _pubR.reset();
     _pubL.reset();
 
-    RCLCPP_INFO(rclcpp::get_logger("rclcpp"), "camera_galaxy destroyed successfully");
+    RCLCPP_INFO(this->get_logger(), "Destroyed successfully");
+  } catch (const std::exception & e) {
+    RCLCPP_ERROR(this->get_logger(), "Exception in destructor: %s", e.what());
+  } catch (...) {
+    RCLCPP_ERROR(this->get_logger(), "Exception in destructor: unknown");
+  }
 }
 
-void CameraGalaxy::_Init() try
+void CameraGalaxy::_Init()
 {
-    _pubL = this->create_publisher<sensor_msgs::msg::Image>(_pubLName, 50);
-    _pubR = this->create_publisher<sensor_msgs::msg::Image>(_pubRName, 50);
+  try {
+    _pubL = this->create_publisher<Image>(_pubLName, 50);
+    _pubR = this->create_publisher<Image>(_pubRName, 50);
 
     _impl = std::make_unique<_Impl>(this);
 
-    _srvStop = this->create_service<std_srvs::srv::Trigger>(_srvStopName, std::bind(&CameraGalaxy::_Stop, this, std::placeholders::_1, std::placeholders::_2));
+    _srvStop = this->create_service<Trigger>(
+      _srvStopName,
+      std::bind(&CameraGalaxy::_Stop, this, std::placeholders::_1, std::placeholders::_2));
 
-    _srvStart = this->create_service<std_srvs::srv::Trigger>(_srvStartName, std::bind(&CameraGalaxy::_Start, this, std::placeholders::_1, std::placeholders::_2));
+    _srvStart = this->create_service<Trigger>(
+      _srvStartName,
+      std::bind(&CameraGalaxy::_Start, this, std::placeholders::_1, std::placeholders::_2));
 
-    RCLCPP_INFO(rclcpp::get_logger("rclcpp"), "camera_galaxy initialized successfully");
-}
-catch(const std::exception& e)
-{
-    RCLCPP_ERROR(rclcpp::get_logger("rclcpp"), "Exception in camera_galaxy initializer: %s", e.what());
+    RCLCPP_INFO(this->get_logger(), "Initialized successfully");
+  } catch (const std::exception & e) {
+    RCLCPP_ERROR(this->get_logger(), "Exception in initializer: %s", e.what());
     rclcpp::shutdown();
-}
-catch(...)
-{
-    RCLCPP_ERROR(rclcpp::get_logger("rclcpp"), "Exception in camera_galaxy initializer: unknown");
+  } catch (...) {
+    RCLCPP_ERROR(this->get_logger(), "Exception in initializer: unknown");
     rclcpp::shutdown();
+  }
 }
 
-void CameraGalaxy::_Start(const std::shared_ptr<std_srvs::srv::Trigger::Request>, std::shared_ptr<std_srvs::srv::Trigger::Response> response) try
+void CameraGalaxy::_Start(
+  const std::shared_ptr<Trigger::Request>,
+  std::shared_ptr<Trigger::Response> response)
 {
+  try {
     response->success = false;
     response->message = "Fail: camera start";
 
@@ -235,45 +265,45 @@ void CameraGalaxy::_Start(const std::shared_ptr<std_srvs::srv::Trigger::Request>
 
     response->success = true;
     response->message = "Success: camera start";
-}
-catch(const std::exception& e)
-{
-    RCLCPP_WARN(rclcpp::get_logger("rclcpp"), "Exception in camera_galaxy service start: %s", e.what());
-}
-catch(...)
-{
-    RCLCPP_WARN(rclcpp::get_logger("rclcpp"), "Exception in camera_galaxy service start: unknown");
+  } catch (const std::exception & e) {
+    RCLCPP_WARN(this->get_logger(), "Exception in service start: %s", e.what());
+  } catch (...) {
+    RCLCPP_WARN(this->get_logger(), "Exception in service start: unknown");
+  }
 }
 
-void CameraGalaxy::_Stop(const std::shared_ptr<std_srvs::srv::Trigger::Request>, std::shared_ptr<std_srvs::srv::Trigger::Response> response) try
+void CameraGalaxy::_Stop(
+  const std::shared_ptr<Trigger::Request>,
+  std::shared_ptr<Trigger::Response> response)
 {
+  try {
     response->success = false;
     response->message = "Fail: camera stop";
 
     _impl->Stop();
 
-    auto ptrL = std::make_unique<sensor_msgs::msg::Image>();
-    auto ptrR = std::make_unique<sensor_msgs::msg::Image>();
+    auto ptrL = std::make_unique<Image>();
+    auto ptrR = std::make_unique<Image>();
     ptrL->header.stamp = ptrR->header.stamp = now();
     ptrL->header.frame_id = ptrR->header.frame_id = "-1";
     PublishL(ptrL);
     PublishR(ptrR);
     response->success = true;
     response->message = "Success: camera stop";
-}
-catch(const std::exception& e)
-{
-    RCLCPP_ERROR(rclcpp::get_logger("rclcpp"), "Exception in camera_galaxy service stop: %s", e.what());
+  } catch (const std::exception & e) {
+    RCLCPP_ERROR(this->get_logger(), "Exception in service stop: %s", e.what());
     rclcpp::shutdown();
-}
-catch(...)
-{
-    RCLCPP_ERROR(rclcpp::get_logger("rclcpp"), "Exception in camera_galaxy service stop: unknown");
+  } catch (...) {
+    RCLCPP_ERROR(this->get_logger(), "Exception in service stop: unknown");
     rclcpp::shutdown();
+  }
 }
 
-}
+}  // namespace camera_galaxy
 
 #include "rclcpp_components/register_node_macro.hpp"
 
+// Register the component with class_loader.
+// This acts as a sort of entry point, allowing the component to be discoverable when its library
+// is being loaded into a running process.
 RCLCPP_COMPONENTS_REGISTER_NODE(camera_galaxy::CameraGalaxy)

@@ -19,12 +19,13 @@ namespace motor_tmcl
 
 #define MOTOR_MAX_BUFF 256
 #define MOTOR_TX_FARMEBUFF 18
-#define MOTOR_INIT_OFFSET 0
-#define MOTOR_POS_ZERO   -(0 + MOTOR_INIT_OFFSET)
-#define MOTOR_POS_ZERO2  -(3200 + MOTOR_INIT_OFFSET) 
-#define MOTOR_POS_CENTER -(6400 + MOTOR_INIT_OFFSET)
-#define MOTOR_POS_END    -(9600 + MOTOR_INIT_OFFSET)
-#define MOTOR_POS_INIT   3610
+#define MOTOR_INIT_OFFSET (0)
+#define MOTOR_POS_ZERO   (0)
+#define MOTOR_DIRECTION_FLAG  (1)    //1或-1
+#define MOTOR_POS_ZERO2  ((3200 + MOTOR_INIT_OFFSET)*motor_direction_flag) 
+#define MOTOR_POS_CENTER ((6400 + MOTOR_INIT_OFFSET)*motor_direction_flag)
+#define MOTOR_POS_END    ((9600 + MOTOR_INIT_OFFSET)*motor_direction_flag)
+#define MOTOR_POS_INIT   1100
 
 //Opcodes of all TMCL commands that can be used in direct mode
 #define TMCL_ROR 1
@@ -118,6 +119,7 @@ public:
     int coder_pos;
     unsigned char coder_count;
     unsigned char buf[20];
+
 };
 
 //class MotorTmcl
@@ -127,7 +129,7 @@ public:
 //
 //};
 
-MotorTmcl::MotorTmcl(MotorArriveFunType function)
+MotorTmcl::MotorTmcl(MotorArriveFunType function,int pos_init = 100,int direction_flag = 1)
 {
     _interrupt = false;
     _motorParamPtr = std::make_unique<_motorParamType>();
@@ -136,6 +138,10 @@ MotorTmcl::MotorTmcl(MotorArriveFunType function)
     {
         _MotorArriveFun = function;
     }
+
+    motor_direction_flag = direction_flag;
+    printf("direction_flag: %d \r\n",direction_flag);
+    motor_pos_init = pos_init;
 }
 
 MotorTmcl::~MotorTmcl()
@@ -176,12 +182,37 @@ unsigned char MotorTmcl::_MotorCheckSumCalc(unsigned char *data,unsigned char le
 ///
 ///        预留
 /// @param motor_mode 电机的操作的模式
-/// @param speed 速度,51200=1r/s,512=0.01r/s依次类推
+/// @param pos 速度,51200=1r/s,512=0.01r/s依次类推
 /// @return <0发送失败 正常时为发送消息的数量
-void MotorTmcl::MotorCtl(char motor_mode,int speed)
+bool MotorTmcl::MotorCtl(int pos)
 {
-
+    int temp1,temp2;
+    
+    temp1 = (MOTOR_POS_ZERO2-MOTOR_INIT_OFFSET)*motor_direction_flag;
+    temp2 = (MOTOR_POS_END-MOTOR_INIT_OFFSET)*motor_direction_flag;
+    
+    
+    
+    if(pos >= (temp1) && pos <= (temp2))
+    {
+        ctl_mode = 3;
+        ctl_flag = 1;
+        ctl_value = pos*motor_direction_flag;
+        
+        return true;
+    }
+    else
+    {
+        return false;
+    }
 }
+
+void MotorTmcl::MotorParamInitGet(int pos_init,char direction_flag)
+{
+    motor_direction_flag = direction_flag;
+    motor_pos_init = pos_init;
+}
+
 
 /// @brief 电机控制函数-扫描
 ///
@@ -321,6 +352,13 @@ void MotorTmcl::_MotorCtlJudgment(void)
                 _motorParamPtr->tar_pos = MOTOR_POS_CENTER;
                 _motorParamPtr->msg_ctl_state = M_MSG_CENTER;
                 _motorParamPtr->msg_flag = 3;  //中心
+                break;
+            case 3:
+                _MotorSendFrame(TMCL_SAP,SAP_MAX_SPEED,512000);
+                _MotorSendFrame(TMCL_MVP,MVP_ABS,(ctl_value+MOTOR_INIT_OFFSET));
+                _motorParamPtr->tar_pos = ctl_value+MOTOR_INIT_OFFSET;
+                _motorParamPtr->msg_ctl_state = M_MSG_CENTER; //偷懒
+                _motorParamPtr->msg_flag = 4;                
                 break;
             default:
                 break;
@@ -472,8 +510,9 @@ void MotorTmcl::_MotorUartRx(unsigned char *rx_buf)
 
 void MotorTmcl::_MotorCailbInit(void)
 {
-    _MotorSendFrame(TMCL_SAP,SAP_MAX_CUR,32);
+    _MotorSendFrame(TMCL_SAP,SAP_MAX_CUR,120);
     _MotorSendFrame(TMCL_SAP,187,1);
+    _MotorSendFrame(TMCL_SAP,186,12000);
     //_MotorSendFrame(TMCL_MVP,MVP_REL,-15360);
     _MotorSendFrame(TMCL_SAP,SAP_MAX_SPEED,512000);
     _MotorSendFrame(TMCL_SAP,5,1011990);
@@ -488,7 +527,7 @@ void MotorTmcl::_MotorCfgInit(void)
 {
     _motorParamPtr->tar_pos = 0;
     _motorParamPtr->act_pos = 0;
-    _MotorSendFrame(TMCL_SAP,SAP_MAX_CUR,60);//运作电流
+    _MotorSendFrame(TMCL_SAP,SAP_MAX_CUR,120);//运作电流
     _MotorSendFrame(TMCL_SAP,SAP_TAR_POS,0);
     _MotorSendFrame(TMCL_SAP,SAP_ACT_POS,0);
     _MotorSendFrame(TMCL_SAP,SAP_MAX_SPEED,512000);
@@ -564,6 +603,7 @@ char MotorTmcl::_MotorTimeManage(void)
 void MotorTmcl::_MotorCoderQuery(void)
 {
     int temp_data = 0;
+    int temp_diff = 0;
 
     if(_motorParamPtr->coder_count == 0xFF)
     {
@@ -577,7 +617,18 @@ void MotorTmcl::_MotorCoderQuery(void)
     }
     else if(_motorParamPtr->coder_count > 0)
     {
-        if(_motorParamPtr->coder_pos <= (MOTOR_POS_INIT+1) && _motorParamPtr->coder_pos >= (MOTOR_POS_INIT-1))
+        temp_diff = (int)motor_pos_init - _motorParamPtr->coder_pos;
+        std::cout << "cur_pos:"<< _motorParamPtr->coder_pos << "neep_pos:"<< motor_pos_init << std::endl;
+        if(temp_diff <=-2048)
+        {
+            temp_diff += 4096;
+        }
+        else if(temp_diff > 2048)
+        {
+            temp_diff -= 4096;
+        }
+        
+        if(temp_diff <= 1 && temp_diff >= -1)
         {
             _motorParamPtr->coder_count = 0xFF;
             _MotorCfgInit(); //初始位置成功后配置
@@ -585,7 +636,9 @@ void MotorTmcl::_MotorCoderQuery(void)
         else
         {
             //计算移动量移动
-            temp_data = ((int)MOTOR_POS_INIT - _motorParamPtr->coder_pos) * 25 / 2;
+            temp_data = -(temp_diff)*motor_direction_flag * 25 / 2;
+            //std::cout << "temp_data:"<< temp_data << std::endl;
+            //printf("motor_direction_flag: %d /r/n",motor_direction_flag);
             _MotorSendFrame(TMCL_MVP,MVP_REL,temp_data);
             _motorParamPtr->coder_count = 0;            
         }

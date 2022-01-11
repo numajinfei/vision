@@ -614,8 +614,7 @@ private:
     }
 
     void _StopGrab() 
-    {
-		/* //todo 暂时屏蔽
+    {		
         for (size_t i = 0; i < _cameras.GetSize(); ++i)
         {
             if(_cameras[i].IsGrabbing())
@@ -623,10 +622,11 @@ private:
                 _cameras[i].StopGrabbing();
             }
         }
-		*/
+		
+    
         std::cout<< "[" << _node -> get_name() << "]" << " frameID: "<< std::stoi(_node -> GetFrameID()) -1 << std::endl;
 
-        
+    /*  //输出一次测量相机触发次数数据到指定文件中，@NOTE: serial number需和测头basler相机对应    
         if(_camera_serial_number == "40138314")
         {
             //todo delete later
@@ -675,8 +675,10 @@ private:
         {
             throw std::runtime_error("wrong serial number");
         }
-
+    */
         _node -> ResetFrameID();
+
+        
 
     }
 

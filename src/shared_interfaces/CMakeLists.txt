@@ -20,7 +20,10 @@ find_package(ament_cmake REQUIRED)
 find_package(rosidl_default_generators REQUIRED)
 find_package(std_msgs REQUIRED)
 
-rosidl_generate_interfaces(${PROJECT_NAME} msg/LineCenter.msg msg/Float64Array.msg msg/RollPitchYaw.msg msg/ModbusCoord.msg DEPENDENCIES std_msgs)
+
+
+
+rosidl_generate_interfaces(${PROJECT_NAME} msg/LineCenter.msg msg/Float64Array.msg msg/RollPitchYaw.msg msg/ModbusCoord.msg srv/TriggerNew.srv DEPENDENCIES std_msgs)
 
 if(BUILD_TESTING)
   find_package(ament_lint_auto REQUIRED)

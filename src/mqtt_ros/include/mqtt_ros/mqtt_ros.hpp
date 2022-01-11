@@ -11,6 +11,8 @@ public:
     ~MqttRos();
     void Publish(std_msgs::msg::String::UniquePtr& ptr);
 
+    void SetConnectLostFlag(bool value);
+
 private:
     void _Init();
     void _Sub(std_msgs::msg::String::UniquePtr ptr);
@@ -26,6 +28,9 @@ private:
     rclcpp::Subscription<std_msgs::msg::String>::SharedPtr _sub;
 
     std::thread _init;
+    bool _loop;
+
+    bool _connect_lost_flag = false;
 };
 
 }

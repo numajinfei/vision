@@ -1,0 +1,103 @@
+[
+    {
+        "enname": "product_info",
+        "product_category": "binocular_vision", "//product_category": "产品类别: monocular, binocular",
+        "product_model": "CLB1180A",            "//product_model": "产品型号: 具体看公司服务器 《产品出厂编码编制规则...》",
+        "product_sn": "bv2021010001",           "//product_sn": "产品序列号: 出厂设置，同时对应mqtt topic",
+        "camera_manufacturer": "basler",        "//camera_manufacturer": "相机厂家: basler or galaxy"
+    },
+
+    {
+        "enname": "measure_camera_basic",
+        "name": "测量相机-基本参数",
+        "params": [
+            {
+                "enname": "frame_rate",
+                "name": "帧率",
+                "value": "60",
+                "default": "60",
+                "unit":"hz",
+                "intro": "相机每秒采集的图像次数，范围：1~90，单位：赫兹hz"
+            },
+            {
+                "enname": "exposure_time",
+                "name": "曝光时间",
+                "value": "500",
+                "default": "500",
+                "unit":"μs",
+                "intro": "相机曝光时间，范围：1~800，单位：微秒μs"
+            }
+           
+        ]
+    },
+
+    {
+        "enname": "observe_camera",
+        "name": "观察相机",
+        "params": [
+            {
+                "enname": "height",
+                "name": "图像高",
+                "value": "1200",
+                "default": "1200",
+                "unit":"pixel",
+                "intro": "图像高度，范围：3~1216，单位：像素（pixel）"
+            },
+            {
+                "enname": "width",
+                "name": "图像宽",
+                "value": "1920",
+                "default": "1920",
+                "unit":"pixel",
+                "intro": "图像宽度，范围：4-1936，步长：4，单位：像素pixel"
+            },
+            {
+                "enname": "offsetY",
+                "name": "高度方向偏移量",
+                "value": "8",
+                "default": "8",
+                "unit":"pixel",
+                "intro": "图像在高度方向上的偏移量，范围：0~1216-图像高，单位：像素pixel"
+            },
+            {
+                "enname": "offsetX",
+                "name": "宽度方向偏移量",
+                "value": "8",
+                "default": "8",
+                "unit":"pixel",
+                "intro": "图像在宽度方向上的偏移量，范围：0~1936-图像宽，单位：像素pixel"
+            },
+            {
+                "enname": "exposure_time",
+                "name": "曝光时间",
+                "value": "",
+                "default": "",
+                "unit":"μs",
+                "intro": "float"
+            }
+        ]
+    },
+
+    {
+        "enname": "laser",
+        "name": "激光器",
+        "params": [
+            {
+                "enname": "scan_time",
+                "name": "扫描时间",
+                "value": "3",
+                "default": "3",
+                "unit":"s",
+                "intro": "激光扫描时间，范围：3~5，单位：秒s"
+            },
+            {
+                "enname": "brightness",
+                "name": "亮度",
+                "value": "100",
+                "default": "100",
+                "unit":"%",
+                "intro": "激光亮度，范围：50%~100%"
+            }
+        ]
+    }
+]

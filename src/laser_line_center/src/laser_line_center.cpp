@@ -69,6 +69,11 @@ private:
     _node->get_parameter("width_max", _widthMax);
   }
 
+  static bool not_equal_to_negativa_one(float num)
+  {
+    return num != -1;
+  }
+
   LineCenter::UniquePtr _Execute(const cv::Mat & img)
   {
     auto line = std::make_unique<LineCenter>();
@@ -109,31 +114,59 @@ private:
 
       line->center[r] = (maxPos + minPos + s1 + s2) * 0.5;
     }
-
+    int count = std::count_if(std::begin(line->center),std::end(line->center),not_equal_to_negativa_one);
+    // RCLCPP_INFO(_node->get_logger(), "[laser_line_center]: Extract laserline points: %d", count);
     return line;
   }
 
   void _Worker()
   {
-    while (rclcpp::ok()) {
+    std::chrono::steady_clock::time_point start_point;
+    bool test_time = true;
+    std::string frameId = "-1";
+
+    while (rclcpp::ok())
+    {
       std::unique_lock<std::mutex> lk(_mutex);
-      if (_deq.empty() == false) {
+      
+      if (_deq.empty() == false)
+      {
+        
+        if(test_time)
+        {
+          start_point = std::chrono::steady_clock::now();
+          test_time = false;
+        }
         auto ptr = std::move(_deq.front());
         _deq.pop_front();
         lk.unlock();
-        if (ptr->header.frame_id == "-1") {
+        if (ptr->header.frame_id == "-1") 
+        {
+          std::cout<<"[laser_line_center] frameId: " << frameId << std::endl;
           auto line = std::make_unique<LineCenter>();
           line->header = ptr->header;
           _node->Publish(line);
-        } else {
-          if (ptr->encoding != "mono8") {
-            RCLCPP_WARN(rclcpp::get_logger("rclcpp"), "Can not handle color image");
+
+          std::chrono::steady_clock::time_point end_point = std::chrono::steady_clock::now();
+
+          auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(end_point - start_point);
+
+          std::cout << "[laser_line_center] spend time: " << duration.count() << "ms" << std::endl;
+          test_time = true;
+          // RCLCPP_INFO(_node -> get_logger(),"[laser_line_center]: %s publish a line, header.frame_id = -1",_node -> get_name());//todo
+        }
+        else
+        {
+          if (ptr->encoding != "mono8")
+          {
+            RCLCPP_WARN(_node->get_logger(), "[laser_line_center]: Can not handle color image");
             continue;
           }
 
           cv::Mat img(ptr->height, ptr->width, CV_8UC1, ptr->data.data());
-          if (img.empty()) {
-            RCLCPP_WARN(rclcpp::get_logger("rclcpp"), "Image message is empty");
+          if (img.empty())
+          {
+            RCLCPP_WARN(_node->get_logger(), "[laser_line_center]: Image message is empty");
             continue;
           }
 
@@ -141,6 +174,7 @@ private:
 
           auto line = _Execute(img);
           line->header = ptr->header;
+          frameId = line->header.frame_id;
           _node->Publish(line);
         }
       } else {
@@ -187,15 +221,24 @@ LaserLineCenter::LaserLineCenter(const rclcpp::NodeOptions & options)
 
 LaserLineCenter::~LaserLineCenter()
 {
-  _sub.reset();
-  _impl.reset();
-  _pub.reset();
+  try {
+    _sub.reset();
+    _impl.reset();
+    _pub.reset();
 
-  RCLCPP_INFO(rclcpp::get_logger("rclcpp"), "laser_line_center destroyed successfully");
+    RCLCPP_INFO(this->get_logger(), "Destroyed successfully");
+  } catch (const std::exception & e) {
+    RCLCPP_ERROR(this->get_logger(), "Exception in destructor: %s", e.what());
+  } catch (...) {
+    RCLCPP_ERROR(this->get_logger(), "Exception in destructor: unknown");
+  }
 }
 
 }  // namespace laser_line_center
 
 #include "rclcpp_components/register_node_macro.hpp"
 
+// Register the component with class_loader.
+// This acts as a sort of entry point, allowing the component to be discoverable when its library
+// is being loaded into a running process.
 RCLCPP_COMPONENTS_REGISTER_NODE(laser_line_center::LaserLineCenter)

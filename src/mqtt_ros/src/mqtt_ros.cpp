@@ -2,8 +2,11 @@
 
 #include "mqtt/async_client.h"
 
+
+
 namespace mqtt_ros
 {
+using namespace std::chrono_literals;
 
 class MqttRos::_Impl
 {
@@ -16,11 +19,12 @@ public:
 
         _cli = std::make_shared<mqtt::async_client>(_serverAddress, _clientId, nullptr);
         _cli->set_callback(_callback);
-        _cli->connect();
+        _cli->connect();	 
     }
 
     ~_Impl()
     {
+        std::cout<<" ~_Impl()"<< std::endl;
         _cli->disconnect();
     }
 
@@ -37,6 +41,7 @@ public:
         if(found != std::string::npos)
         {
             _cli->publish(_topic + "/result", str.c_str(), str.size(), _qos, false);
+            std::cout<<"[mqtt_ros]: publish result successfully" <<std::endl;
             return;
         }
 
@@ -47,12 +52,25 @@ public:
     {
         auto msg = std::make_unique<std_msgs::msg::String>();
         msg->data = str;
+        std::cout << "msg is %s \n" << str;
+        RCLCPP_INFO(rclcpp::get_logger("rclcpp"),"[mqtt_ros] publish ros message: %s",str.c_str());
         _node->Publish(msg);
     }
 
     void Subscribe()
     {
         _cli->subscribe(_topic + "/control", _qos);
+    }
+
+    void SetConnectLostFlag(bool value)
+    {
+        _node->SetConnectLostFlag(value);
+    }
+    
+    
+    void MqttReconnect(void)
+    {
+        _cli->connect();
     }
 
 private:
@@ -68,8 +86,10 @@ private:
     {
         _node->get_parameter("server_address", _serverAddress);
         _node->get_parameter("client_id", _clientId);
-        _node->get_parameter("topic", _topic);
+        _node->get_parameter("topic", _topic);			
         _node->get_parameter("qos", _qos);
+		
+		_topic += _clientId;
     }
 
     class Callback : public mqtt::callback
@@ -82,13 +102,14 @@ private:
     private:
         void connected(const std::string& /*cause*/) override
         {
+            _impl->SetConnectLostFlag(false);
             _impl->Subscribe();
         }
 
         void connection_lost(const std::string& /*cause*/) override
         {
             RCLCPP_ERROR(rclcpp::get_logger("rclcpp"), "MQTT connection lost!");
-            rclcpp::shutdown();
+            _impl->SetConnectLostFlag(true);
         }
 
         void message_arrived(mqtt::const_message_ptr msg) override
@@ -123,6 +144,7 @@ MqttRos::MqttRos(const rclcpp::NodeOptions& options) : Node("mqtt_ros_node", opt
 
 MqttRos::~MqttRos()
 {
+    _loop = false;
     _init.join();
 
     _sub.reset();
@@ -135,10 +157,14 @@ MqttRos::~MqttRos()
 void MqttRos::Publish(std_msgs::msg::String::UniquePtr& ptr)
 {
     _pub->publish(std::move(ptr));
+    // RCLCPP_INFO(rclcpp::get_logger("mqtt"),"publish result successfully");//todo
 }
 
 void MqttRos::_Init() try
 {
+
+    std::this_thread::sleep_for(5000ms); //time delay to sure other nodes start up
+    
     _pub = this->create_publisher<std_msgs::msg::String>(_pubName, 10);
 
     _impl = std::make_unique<_Impl>(this);
@@ -146,6 +172,38 @@ void MqttRos::_Init() try
     _sub = this->create_subscription<std_msgs::msg::String>(_subName, 10, std::bind(&MqttRos::_Sub, this, std::placeholders::_1));
 
     RCLCPP_INFO(rclcpp::get_logger("rclcpp"), "mqtt_ros initialized successfully");
+    
+    _loop = true;
+    
+    int retry_count = 0;
+    while(_loop)
+    {
+	    
+	    if(_connect_lost_flag != false)
+	    {
+	      retry_count++;
+	      if(retry_count >= 5)
+	      {
+		retry_count = 0;
+		RCLCPP_INFO(rclcpp::get_logger("mqtt"),"mqtt node shut down");
+		rclcpp::shutdown();		
+		break;
+	      }
+	      else
+	      {	
+		RCLCPP_INFO(rclcpp::get_logger("mqtt"),"mqtt link reconnect");
+		_impl->MqttReconnect();	                  
+	      }
+	    }
+	    else
+	    {	    		    	
+	        if(retry_count != 0)
+	    	    retry_count = 0;	    	
+	    }
+
+	    std::this_thread::sleep_for(5000ms);
+     }
+     
 }
 catch(const std::exception& e)
 {
@@ -169,6 +227,11 @@ catch(const std::exception& e)
 catch(...)
 {
     RCLCPP_ERROR(rclcpp::get_logger("rclcpp"), "Exception in mqtt_ros subscription: unknown");
+}
+
+void MqttRos::SetConnectLostFlag(bool value)
+{
+    _connect_lost_flag = value;
 }
 
 }

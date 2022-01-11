@@ -26,16 +26,29 @@ find_package(PCL 1.3 REQUIRED)
 
 add_library(point_cloud_analyse SHARED src/point_cloud_analyse.cpp)
 
-target_include_directories(point_cloud_analyse PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include> $<INSTALL_INTERFACE:include>)
+target_include_directories(point_cloud_analyse
+  PUBLIC
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+    $<INSTALL_INTERFACE:include>
+)
 
-ament_target_dependencies(point_cloud_analyse rclcpp rclcpp_components std_srvs sensor_msgs shared_interfaces)
+ament_target_dependencies(point_cloud_analyse
+  rclcpp
+  rclcpp_components
+  std_srvs
+  sensor_msgs
+  shared_interfaces
+)
 
 include_directories(${PCL_INCLUDE_DIRS})
 link_directories(${PCL_LIBRARY_DIRS})
 add_definitions(${PCL_DEFINITIONS})
 target_link_libraries(point_cloud_analyse ${PCL_LIBRARIES})
 
-rclcpp_components_register_node(point_cloud_analyse PLUGIN "point_cloud_analyse::PointCloudAnalyse" EXECUTABLE point_cloud_analyse_node)
+rclcpp_components_register_node(point_cloud_analyse
+  PLUGIN "point_cloud_analyse::PointCloudAnalyse"
+  EXECUTABLE point_cloud_analyse_node
+)
 
 if(BUILD_TESTING)
   find_package(ament_lint_auto REQUIRED)
@@ -56,4 +69,3 @@ install(DIRECTORY config DESTINATION share/${PROJECT_NAME})
 ament_export_targets(export_point_cloud_analyse HAS_LIBRARY_TARGET)
 
 ament_package()
-

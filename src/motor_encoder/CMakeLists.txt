@@ -20,12 +20,14 @@ find_package(ament_cmake REQUIRED)
 find_package(rclcpp REQUIRED)
 find_package(rclcpp_components REQUIRED)
 find_package(std_srvs REQUIRED)
+find_package(shared_interfaces REQUIRED)
+
 
 add_library(motor_encoder SHARED src/motor_encoder.cpp src/motor_tmcl.cpp src/motor_uart.cpp)
 
 target_include_directories(motor_encoder PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include> $<INSTALL_INTERFACE:include>)
 
-ament_target_dependencies(motor_encoder rclcpp rclcpp_components std_srvs)
+ament_target_dependencies(motor_encoder rclcpp rclcpp_components std_srvs shared_interfaces)
 
 rclcpp_components_register_node(motor_encoder PLUGIN "motor_encoder::MotorEncoder" EXECUTABLE motor_encoder_node)
 

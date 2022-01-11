@@ -22,13 +22,22 @@ find_package(rclcpp_components REQUIRED)
 find_package(sensor_msgs REQUIRED)
 find_package(shared_interfaces REQUIRED)
 find_package(OpenCV REQUIRED)
-find_package(PCL 1.3 REQUIRED)
+find_package(PCL 1.3 REQUIRED COMPONENTS common)
 
 add_library(laser_line_reconstruct SHARED src/laser_line_reconstruct.cpp)
 
-target_include_directories(laser_line_reconstruct PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include> $<INSTALL_INTERFACE:include>)
+target_include_directories(laser_line_reconstruct
+  PUBLIC
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+    $<INSTALL_INTERFACE:include>
+)
 
-ament_target_dependencies(laser_line_reconstruct rclcpp rclcpp_components sensor_msgs shared_interfaces)
+ament_target_dependencies(laser_line_reconstruct
+  rclcpp
+  rclcpp_components
+  sensor_msgs
+  shared_interfaces
+)
 
 if(opencv_world IN_LIST OpenCV_LIBS)
   target_link_libraries(laser_line_reconstruct opencv_world)
@@ -41,7 +50,10 @@ link_directories(${PCL_LIBRARY_DIRS})
 add_definitions(${PCL_DEFINITIONS})
 target_link_libraries(laser_line_reconstruct ${PCL_LIBRARIES})
 
-rclcpp_components_register_node(laser_line_reconstruct PLUGIN "laser_line_reconstruct::LaserLineReconstruct" EXECUTABLE laser_line_reconstruct_node)
+rclcpp_components_register_node(laser_line_reconstruct
+  PLUGIN "laser_line_reconstruct::LaserLineReconstruct"
+  EXECUTABLE laser_line_reconstruct_node
+)
 
 if(BUILD_TESTING)
   find_package(ament_lint_auto REQUIRED)

@@ -23,20 +23,22 @@ from launch_ros.actions import ComposableNodeContainer
 def generate_launch_description():
     """Generate launch description with a component."""
     configFile = os.path.join(
-        get_package_share_directory('gpio_raspberry'),
+        get_package_share_directory('point_cloud_analyse'),
         'config',
         'params.yaml')
 
     with open(configFile, 'r') as file:
-        configParams = yaml.safe_load(file)['gpio_raspberry_node']['ros__parameters']
+        configParams = yaml.safe_load(file)['point_cloud_analyse_node']['ros__parameters']
 
     node = ComposableNode(
-        package='gpio_raspberry',
-        plugin='gpio_raspberry::GpioRaspberry',
-        parameters=[configParams])
+        package='point_cloud_analyse',
+        plugin='point_cloud_analyse::PointCloudAnalyse',
+        remappings = [('~/points', '/point_cloud_collect_node/points'), ('~/result', '/common/result'), ('~/rpy', '/inclinometer_node/rpy')],
+        parameters=[configParams],
+        extra_arguments=[{'use_intra_process_comms': True}])
 
     container = ComposableNodeContainer(
-        name='gpio_raspberry_container',
+        name='point_cloud_analyse_container',
         namespace='',
         package='rclcpp_components',
         executable='component_container',

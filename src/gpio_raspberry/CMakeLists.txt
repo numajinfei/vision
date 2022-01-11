@@ -23,11 +23,22 @@ find_package(std_srvs REQUIRED)
 
 add_library(gpio_raspberry SHARED src/gpio_raspberry.cpp)
 
-target_include_directories(gpio_raspberry PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include> $<INSTALL_INTERFACE:include>)
+target_include_directories(gpio_raspberry
+  PUBLIC
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+    $<INSTALL_INTERFACE:include>
+)
+target_link_libraries(gpio_raspberry gpiod)
+ament_target_dependencies(gpio_raspberry
+  rclcpp
+  rclcpp_components
+  std_srvs
+)
 
-ament_target_dependencies(gpio_raspberry rclcpp rclcpp_components std_srvs)
-
-rclcpp_components_register_node(gpio_raspberry PLUGIN "gpio_raspberry::GpioRaspberry" EXECUTABLE gpio_raspberry_node)
+rclcpp_components_register_node(gpio_raspberry
+  PLUGIN "gpio_raspberry::GpioRaspberry"
+  EXECUTABLE gpio_raspberry_node
+)
 
 if(BUILD_TESTING)
   find_package(ament_lint_auto REQUIRED)

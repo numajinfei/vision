@@ -27,8 +27,7 @@ add_library(script_json SHARED src/script_json.cpp)
 
 target_include_directories(script_json PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include> $<INSTALL_INTERFACE:include>)
 
-#ament_target_dependencies(script_json rclcpp rclcpp_components std_srvs shared_interfaces nlohmann_json)
-ament_target_dependencies(script_json rclcpp rclcpp_components std_srvs shared_interfaces)
+ament_target_dependencies(script_json rclcpp rclcpp_components std_srvs shared_interfaces )
 
 rclcpp_components_register_node(script_json PLUGIN "script_json::ScriptJson" EXECUTABLE script_json_node)
 

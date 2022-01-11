@@ -26,9 +26,19 @@ find_package(OpenCV REQUIRED)
 
 add_library(laser_line_center SHARED src/laser_line_center.cpp)
 
-target_include_directories(laser_line_center PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include> $<INSTALL_INTERFACE:include>)
+target_include_directories(laser_line_center
+  PUBLIC
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+    $<INSTALL_INTERFACE:include>
+)
 
-ament_target_dependencies(laser_line_center rclcpp rclcpp_components std_srvs sensor_msgs shared_interfaces)
+ament_target_dependencies(laser_line_center
+  rclcpp
+  rclcpp_components
+  std_srvs
+  sensor_msgs
+  shared_interfaces
+)
 
 if(opencv_world IN_LIST OpenCV_LIBS)
   target_link_libraries(laser_line_center opencv_world)
@@ -36,7 +46,10 @@ else()
   target_link_libraries(laser_line_center ${OpenCV_LIBS})
 endif()
 
-rclcpp_components_register_node(laser_line_center PLUGIN "laser_line_center::LaserLineCenter" EXECUTABLE laser_line_center_node)
+rclcpp_components_register_node(laser_line_center
+  PLUGIN "laser_line_center::LaserLineCenter"
+  EXECUTABLE laser_line_center_node
+)
 
 if(BUILD_TESTING)
   find_package(ament_lint_auto REQUIRED)

@@ -40,7 +40,7 @@ class MotorTmcl
 {
 public:
     
-    explicit MotorTmcl(MotorArriveFunType function);
+    explicit MotorTmcl(MotorArriveFunType function,int pos_init,int direction_flag);
     ~MotorTmcl();
     
     /// @brief 电机控制函数-扫描
@@ -59,7 +59,9 @@ public:
     ///        勿调用太频繁（>5ms）
     /// @return none
     void MotorCtlCenter(void);
-
+    
+    void MotorParamInitGet(int pos_init,char direction_flag);
+    bool MotorCtl(int pos);
 private:
     void _MotorTask(void);
     unsigned short _ChangeWordFormat(unsigned short value);
@@ -80,10 +82,12 @@ private:
     void _MotorCfgInit(void);
     void _MotorInfoQuery(void);
     char _MotorTimeManage(void);
-    void MotorCtl(char motor_mode,int speed);
     MotorArriveFunType _MotorArriveFun;
 
 private:
+    int motor_pos_init = 100;
+    int motor_direction_flag = 1;  //1或-1
+
     class _motorParamType;
     std::unique_ptr<_motorParamType> _motorParamPtr;
 

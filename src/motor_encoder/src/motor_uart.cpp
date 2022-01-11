@@ -1,7 +1,7 @@
 /// @file  motor_uart.cpp
 /// @brief 电机串口配置文件
 ///
-///        电机波特率配置为了9600
+///        电机波特率配置为�?600
 ///        电机型号PD20-1-1210,串口通信
 /// @author zhouhao <1198826224@qq.com>
 #include <stdio.h>
@@ -18,20 +18,32 @@
 
 static int _MotorUartOpen(int fd, const char *path)
 {
-    printf("try to open %s ...\n", path);
-    fd = open(path, O_RDWR | O_NOCTTY | O_NONBLOCK);//非阻塞式读写
+    printf("try to open %s ...\r\n", path);
+    for(int i=0;i<10;i++)
+    {
+        fd = open(path, O_RDWR | O_NOCTTY | O_NONBLOCK);//非阻塞式读写
+        if(fd > 2)
+        {
+            break;
+        }
+        else
+        {
+            perror("open fail number \n");
+            sleep(10);
+        }
+    }
     if (-1 == fd){
         perror("Can't Open Serial Port");
         return(-1);
     }
     else
-        printf("open %s .....\n", path);
+        printf("open %s .....\r\n", path);
 
     printf("fd-open=%d\n",fd);
     return fd;
 }
 
-/* 五个参量 fd打开文件 speed设置波特率 bit数据位设置   nevent奇偶校验位 stop停止位 */
+/* 五个参量 fd打开文件 speed设置波特�?bit数据位设�?  nevent奇偶校验�?stop停止�?*/
 static int _MotorUartSet(int fd, int nSpeed, int nBits, char nEvent, int nStop)
 {
     struct termios newtio,oldtio;

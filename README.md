@@ -4,7 +4,7 @@
  * @Author: hw
  * @Date: 2021-12-20 13:23:58
  * @LastEditors: hw
- * @LastEditTime: 2021-12-24 11:24:39
+ * @LastEditTime: 2022-01-10 08:55:57
 -->
 # 1. vision
 vision probe project，including code testing, build, CI/CD and release
@@ -24,6 +24,5 @@ vision probe project，including code testing, build, CI/CD and release
     ```
 ## 2. docker enter the running container
 ```shell
-docker exec -it <container_name> /bin/bash
+docker exec -it <container_name/alias_name> /bin/bash
 ```
- 

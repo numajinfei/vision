@@ -25,15 +25,29 @@ find_package(sensor_msgs REQUIRED)
 set(CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake" CMAKE_MODULE_PATH)
 find_package(GALAXY REQUIRED)
 
-add_library(camera_galaxy SHARED src/camera_galaxy.cpp)
+add_library(camera_galaxy
+  SHARED src/camera_galaxy.cpp
+)
 
-target_include_directories(camera_galaxy PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include> $<INSTALL_INTERFACE:include>)
+target_include_directories(camera_galaxy
+  PUBLIC
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+    $<INSTALL_INTERFACE:include>
+)
 
-ament_target_dependencies(camera_galaxy rclcpp rclcpp_components std_srvs sensor_msgs)
+ament_target_dependencies(camera_galaxy
+  rclcpp
+  rclcpp_components
+  std_srvs
+  sensor_msgs
+)
 
 target_link_libraries(camera_galaxy GALAXY::GALAXY)
 
-rclcpp_components_register_node(camera_galaxy PLUGIN "camera_galaxy::CameraGalaxy" EXECUTABLE camera_galaxy_node)
+rclcpp_components_register_node(camera_galaxy
+  PLUGIN "camera_galaxy::CameraGalaxy"
+  EXECUTABLE camera_galaxy_node
+)
 
 if(BUILD_TESTING)
   find_package(ament_lint_auto REQUIRED)

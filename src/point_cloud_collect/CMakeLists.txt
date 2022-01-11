@@ -24,16 +24,27 @@ find_package(PCL 1.3 REQUIRED)
 
 add_library(point_cloud_collect SHARED src/point_cloud_collect.cpp)
 
-target_include_directories(point_cloud_collect PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include> $<INSTALL_INTERFACE:include>)
+target_include_directories(point_cloud_collect
+  PUBLIC
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+    $<INSTALL_INTERFACE:include>
+)
 
-ament_target_dependencies(point_cloud_collect rclcpp rclcpp_components sensor_msgs)
+ament_target_dependencies(point_cloud_collect
+  rclcpp
+  rclcpp_components
+  sensor_msgs
+)
 
 include_directories(${PCL_INCLUDE_DIRS})
 link_directories(${PCL_LIBRARY_DIRS})
 add_definitions(${PCL_DEFINITIONS})
 target_link_libraries(point_cloud_collect ${PCL_LIBRARIES})
 
-rclcpp_components_register_node(point_cloud_collect PLUGIN "point_cloud_collect::PointCloudCollect" EXECUTABLE point_cloud_collect_node)
+rclcpp_components_register_node(point_cloud_collect
+  PLUGIN "point_cloud_collect::PointCloudCollect"
+  EXECUTABLE point_cloud_collect_node
+)
 
 if(BUILD_TESTING)
   find_package(ament_lint_auto REQUIRED)
@@ -54,4 +65,3 @@ install(DIRECTORY config DESTINATION share/${PROJECT_NAME})
 ament_export_targets(export_point_cloud_collect HAS_LIBRARY_TARGET)
 
 ament_package()
-
