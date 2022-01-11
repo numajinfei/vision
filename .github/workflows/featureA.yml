@@ -89,5 +89,5 @@ jobs:
           file: ./Dockerfile/ros_featureA_deploy.Dockerfile
           platforms: linux/amd64,linux/arm64
           push: true
-          tags: ${{ secrets.DOCKER_HUB_USERNAME }}/ros2_feature_b_deploy
+          tags: ${{ secrets.DOCKER_HUB_USERNAME }}/ros2_feature_a_deploy
 
