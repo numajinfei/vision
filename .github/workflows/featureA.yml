@@ -25,7 +25,7 @@ jobs:
         uses: actions/checkout@v2
         with:
           #submodules: recursive
-          ref: fratureA
+          ref: featureA
           #fetch-depth: 2
        
       #- name: Check if submodule is on most recent master commit
@@ -66,7 +66,7 @@ jobs:
       - name: Check-out repository
         uses: actions/checkout@v2
         with:     
-          ref: fratureA     
+          ref: featureA     
           #fetch-depth: 2
 
       - name: Set up QEMU
