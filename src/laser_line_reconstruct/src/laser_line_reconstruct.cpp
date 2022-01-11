@@ -105,6 +105,8 @@ private:
   {
     const auto & centerL = ptrL->center;
     const auto & centerR = ptrR->center;
+    // std::cout << "[" << _node->get_name() << "]" << ": centerL size: " << centerL.size() << "; centerR size: " << centerR.size() <<std::endl;
+    cv::waitKey(5);
 
     _pL.clear();
     _pR.clear();
@@ -209,7 +211,9 @@ private:
     std::chrono::steady_clock::time_point start_point;
     bool test_time = true;
     std::string frameId = "-1";
-    while (rclcpp::ok()) {
+
+    while (rclcpp::ok()) 
+    {
       std::unique_lock<std::mutex> lk(_mutex);
 
       LineCenter::UniquePtr pL = nullptr;
@@ -223,24 +227,8 @@ private:
         }
         lk.unlock();
         // RCLCPP_INFO(rclcpp::get_logger("laser_line_reconstruct"),"PL frame_id: %s",pL->header.frame_id.c_str());//todo
-        if (pL->header.frame_id == "-1")
+        if ( !(pL->header.frame_id == "-1" || pR->header.frame_id == "-1") )
         {
-          std::cout << "[laser_line_reconstruct] frameId: " << frameId << std::endl;
-          auto ptr = std::make_unique<PointCloud2>();
-          ptr->header = pL->header;
-          _node->Publish(ptr);
-
-          std::chrono::steady_clock::time_point end_point = std::chrono::steady_clock::now();
-
-          auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(end_point - start_point);
-
-          std::cout << "[laser_line_reconstruct] spend time: " << duration.count() << "ms" << std::endl;
-          test_time = true;
-          // RCLCPP_INFO(rclcpp::get_logger("laser_line_reconstruct")," publish line pointcloud, header.frame_id = -1");//todo
-        }
-        else 
-        {         
-
           auto ptr = _Execute(pL, pR);
          
           if (ptr) 
@@ -252,6 +240,32 @@ private:
 
 
           }
+          // RCLCPP_INFO(rclcpp::get_logger("laser_line_reconstruct")," publish line pointcloud, header.frame_id = -1");//todo
+        }
+        else 
+        {    
+            std::cout << "[" << _node->get_name() <<"]" << ": frameId: " << frameId << std::endl;
+            auto ptr = std::make_unique<PointCloud2>();
+            if (pL->header.frame_id == "-1") 
+            {
+              ptr->header = pL->header;
+            }
+            else 
+            {
+              ptr->header = pR->header;
+            }
+            
+            _node->Publish(ptr);
+
+            std::chrono::steady_clock::time_point end_point = std::chrono::steady_clock::now();
+            auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(end_point - start_point);
+            std::cout << "[" <<  _node->get_name() << "]" << ": spend time: " << duration.count() << "ms" << std::endl;
+            test_time = true;
+            // RCLCPP_INFO(rclcpp::get_logger("laser_line_reconstruct")," publish line pointcloud, header.frame_id = -1");//todo
+
+               
+
+
         }
       } 
       else
@@ -292,92 +306,157 @@ private:
 
     if (idL == idR)
     {
+      // std::cout<<"_deqL.id: " << idL << " = _deqR.id: " << idR <<std::endl;
+       cv::waitKey(5);
       _PopFront(pL, pR);
       return true;
     } 
-
-
-    else if (idL > idR)
+    else if (idL > idR && idR > 0)
     {
 
-      std::cout<<"_deqL.id > _deqR.id" <<std::endl;
-      for (auto iter = _deqR.begin(); iter != _deqR.end(); ++iter)
-      {
-        std::cout<<"_deqR current id: "<<(*iter) -> header.frame_id <<std::endl;
-        if( (*iter) -> header.frame_id == "-1")
+        // std::cout<<"_deqL.id: " << idL << " > _deqR.id: " << idR <<std::endl;
+         cv::waitKey(5);
+        for (auto iter = _deqR.begin(); iter != _deqR.end(); ++iter)
         {
-          for (auto iter = _deqL.begin(); iter != _deqL.end(); ++iter)
-          {
-            if (idR == std::stoi((*iter)->header.frame_id))
+            auto idT = std::stoi((*iter)->header.frame_id);
+            // std::cout<<"idT: " << idT << std::endl;
+            cv::waitKey(5);
+            if(idT == -1)
             {
-              std::cout<<"_deqL.id: "<<(*iter)->header.frame_id<<std::endl;
-              _deqL.erase(_deqL.begin(), iter);
-              _PopFront(pL, pR);
-              return true;
+                  _deqR.erase(_deqR.begin(), iter);
+                  return false;
             }
-          }
-          _deqL.clear();
-          std::cout<<"_deqL.clear()"<<std::endl;
-          return false;
-        }
-        else 
-        {
-          if (idL == std::stoi((*iter)->header.frame_id))
-          {
-            std::cout<<"_deqR.id:"<<(*iter)->header.frame_id<<std::endl;
-            _deqR.erase(_deqR.begin(), iter);
-            _PopFront(pL, pR);
-            return true;
-          }          
-          // _deqR.clear();
-          // std::cout<<"_deqR.clear()"<<std::endl;
-          // return false; 
-        }
-      } 
-      _deqR.clear();
-      std::cout<<"_deqR.clear()"<<std::endl;
-      return false; 
-
-    } 
-    else //idR > idL
-    {
-      std::cout<<"_deqR.id > _deqL.id" <<std::endl;
-      for (auto iter = _deqL.begin(); iter != _deqL.end(); ++iter)
-      {
-        std::cout<<"_deqL.id: "<<(*iter)->header.frame_id <<std::endl;
-        if( (*iter)->header.frame_id == "-1")
-        {
-          for (auto iter = _deqR.begin(); iter != _deqR.end(); ++iter)
-          {
-            if (idL == std::stoi((*iter)->header.frame_id))
+            if (idL == idT)
             {
-              std::cout<<"_deqR.id: " << (*iter)->header.frame_id<<std::endl;
-              _deqR.erase(_deqR.begin(), iter);
-              _PopFront(pL, pR);
-              return true;
+                std::cout<<"_deqR.id:"<<(*iter)->header.frame_id<<std::endl;
+                 cv::waitKey(5);
+                _deqR.erase(_deqR.begin(), iter);
+                _PopFront(pL, pR);
+                return true;
             } 
-          }
-          _deqR.clear();
-          std::cout<<"_deqR.clear()"<<std::endl;
-          return false;
         }
-        else
-        {
-          if (idR == std::stoi((*iter)->header.frame_id)) 
-          {
-            _deqL.erase(_deqL.begin(), iter);
-            _PopFront(pL, pR);
-            return true;              
-          }
-
-        }
-
-      }
-      _deqL.clear();
-      std::cout<<"_deqL.clear()"<<std::endl;
-      return false;
-
     }
+    else if (idR > idL && idL > 0)
+    {
+        std::cout<<"_deqR.id: " << idR << " > _deqL.id: " << idL <<std::endl;
+         cv::waitKey(5);
+        for (auto iter = _deqL.begin(); iter != _deqL.end(); ++iter)
+        {
+            auto idT = std::stoi((*iter)->header.frame_id);
+            std::cout<<"idT: " << idT << std::endl;
+            cv::waitKey(5);
+            if(idT == -1)
+            {
+                _deqL.erase(_deqL.begin(), iter);
+                return false;
+            }
+            else if (idR == idT)
+            {
+                std::cout<<"_deqL.id:"<<(*iter)->header.frame_id<<std::endl;
+                 cv::waitKey(5);
+                _deqL.erase(_deqL.begin(), iter);
+                _PopFront(pL, pR);
+                return true;
+            } 
+        }
+    }
+    else if(idR == -1 || idL == -1)
+    {
+        std::cout<<"idR == -1 || idL == -1, _deqL.clear(), _deqR.clear()"<<std::endl;
+         cv::waitKey(5);
+        _PopFront(pL, pR);
+        _deqL.clear();
+        _deqR.clear();
+        return true;
+    }
+
+    return false;
+    // else
+    // {
+    //     throw std::runtime_error("failed pair");
+    // }
+
+    // else if (idL > idR)
+    // {
+
+    //   std::cout<<"_deqL.id > _deqR.id" <<std::endl;
+    //   for (auto iter = _deqR.begin(); iter != _deqR.end(); ++iter)
+    //   {
+    //     std::cout<<"_deqR current id: "<<(*iter) -> header.frame_id <<std::endl;
+    //     if( (*iter) -> header.frame_id == "-1")
+    //     {
+    //       for (auto iter = _deqL.begin(); iter != _deqL.end(); ++iter)
+    //       {
+    //         if (idR == std::stoi((*iter)->header.frame_id))
+    //         {
+    //           std::cout<<"_deqL.id: "<<(*iter)->header.frame_id<<std::endl;
+    //           _deqL.erase(_deqL.begin(), iter);
+    //           _PopFront(pL, pR);
+    //           return true;
+    //         }
+    //       }
+    //       _deqL.clear();
+    //       std::cout<<"_deqL.clear()"<<std::endl;
+    //       return false;
+    //     }
+    //     else 
+    //     {
+    //       if (idL == std::stoi((*iter)->header.frame_id))
+    //       {
+    //         std::cout<<"_deqR.id:"<<(*iter)->header.frame_id<<std::endl;
+    //         _deqR.erase(_deqR.begin(), iter);
+    //         _PopFront(pL, pR);
+    //         return true;
+    //       }          
+    //       // _deqR.clear();
+    //       // std::cout<<"_deqR.clear()"<<std::endl;
+    //       // return false; 
+    //     }
+    //   } 
+    //   _deqR.clear();
+    //   std::cout<<"_deqR.clear()"<<std::endl;
+    //   return false; 
+
+    // } 
+    // else //idR > idL
+    // {
+    //   std::cout<<"_deqR.id > _deqL.id" <<std::endl;
+    //   for (auto iter = _deqL.begin(); iter != _deqL.end(); ++iter)
+    //   {
+    //     std::cout<<"_deqL.id: "<<(*iter)->header.frame_id <<std::endl;
+    //     if( (*iter)->header.frame_id == "-1")
+    //     {
+    //       for (auto iter = _deqR.begin(); iter != _deqR.end(); ++iter)
+    //       {
+    //         if (idL == std::stoi((*iter)->header.frame_id))
+    //         {
+    //           std::cout<<"_deqR.id: " << (*iter)->header.frame_id<<std::endl;
+    //           _deqR.erase(_deqR.begin(), iter);
+    //           _PopFront(pL, pR);
+    //           return true;
+    //         } 
+    //       }
+    //       _deqR.clear();
+    //       std::cout<<"_deqR.clear()"<<std::endl;
+    //       return false;
+    //     }
+    //     else
+    //     {
+    //       if (idR == std::stoi((*iter)->header.frame_id)) 
+    //       {
+    //         _deqL.erase(_deqL.begin(), iter);
+    //         _PopFront(pL, pR);
+    //         return true;              
+    //       }
+
+    //     }
+
+    //   }
+    //   _deqL.clear();
+    //   std::cout<<"_deqL.clear()"<<std::endl;
+    //   return false;
+
+    // }
   }
 
   float _InterpolateX(const cv::Point2f & p0, const cv::Point2f & p1, float y)

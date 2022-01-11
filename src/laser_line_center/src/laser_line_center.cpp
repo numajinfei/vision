@@ -142,7 +142,7 @@ private:
         lk.unlock();
         if (ptr->header.frame_id == "-1") 
         {
-          std::cout<<"[laser_line_center] frameId: " << frameId << std::endl;
+          std::cout<< "[" << _node->get_name() << "]" << ": frameId: " << frameId << std::endl;
           auto line = std::make_unique<LineCenter>();
           line->header = ptr->header;
           _node->Publish(line);
@@ -151,7 +151,7 @@ private:
 
           auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(end_point - start_point);
 
-          std::cout << "[laser_line_center] spend time: " << duration.count() << "ms" << std::endl;
+          std::cout << "[" << _node->get_name() << "]" << ": spend time: " << duration.count() << "ms" << std::endl;
           test_time = true;
           // RCLCPP_INFO(_node -> get_logger(),"[laser_line_center]: %s publish a line, header.frame_id = -1",_node -> get_name());//todo
         }

@@ -62,18 +62,18 @@ void ScriptJson::_Init()
     {
         if(_IsNodesReady())
         {
-            RCLCPP_DEBUG(rclcpp::get_logger("rclcpp"), "Nodes ready");
+            RCLCPP_INFO(rclcpp::get_logger("rclcpp"), "Nodes ready");
             break;
         }
 
-        CheckAndSleep(1);
+        CheckAndSleep(2);
     }
 
     while(true)
     {
         if(_IsServicesReady())
         {
-            RCLCPP_DEBUG(rclcpp::get_logger("rclcpp"), "Services ready");
+            RCLCPP_INFO(rclcpp::get_logger("rclcpp"), "Services ready");
             break;
         }
 
@@ -84,7 +84,7 @@ void ScriptJson::_Init()
     {
         const auto& n = p.first;
         p.second = this->create_client<std_srvs::srv::Trigger>(n);
-        RCLCPP_DEBUG(rclcpp::get_logger("rclcpp"), "Services ready [%s]", n.c_str());
+        RCLCPP_INFO(rclcpp::get_logger("rclcpp"), "Services ready [%s]", n.c_str());
     }
 
     _paramClient = std::make_unique<rclcpp::AsyncParametersClient>(this, "/point_cloud_analyse_node");
@@ -92,7 +92,7 @@ void ScriptJson::_Init()
     {
         if(_paramClient->service_is_ready())
         {
-            RCLCPP_DEBUG(rclcpp::get_logger("rclcpp"), "Parameter client ready");
+            RCLCPP_INFO(rclcpp::get_logger("rclcpp"), "Parameter client ready");
             break;
         }
 
@@ -124,6 +124,7 @@ bool ScriptJson::_IsNodesReady()
             return false;
     }
 
+    RCLCPP_INFO(rclcpp::get_logger("rclcpp"),"[_IsNodesReady] all needed nodes are ready");
     return true;
 }
 
@@ -150,6 +151,7 @@ bool ScriptJson::_IsServicesReady()
         }
     }
 
+    RCLCPP_INFO(rclcpp::get_logger("rclcpp"),"[_IsServicesReady] all needed services are ready");
     return true;
 }
 
@@ -159,7 +161,7 @@ void ScriptJson::_Execute() try
     {
         CheckAndSend(_map["/gpio_raspberry_node/high"]);
 
-        CheckAndSend(_map["/motor_node/center"]);
+        CheckAndSend(_map["/motor_encoder_node/center"]);
 
         CheckAndSleep(5);
 
@@ -172,7 +174,7 @@ void ScriptJson::_Execute() try
     {
         CheckAndSend(_map["/gpio_raspberry_node/low"]);
 
-        CheckAndSend(_map["/motor_node/zero"]);
+        CheckAndSend(_map["/motor_encoder_node/zero"]);
 
         CheckAndSleep(5);
 
@@ -203,7 +205,7 @@ void ScriptJson::_Execute() try
         throw std::runtime_error("Unsupported operation");
     }
 
-    CheckAndSend(_map["/motor_node/zero"]);
+    CheckAndSend(_map["/motor_encoder_node/zero"]);
 
     CheckAndSend(_map["/gpio_raspberry_node/high"]);
 
@@ -211,13 +213,17 @@ void ScriptJson::_Execute() try
 
     CheckAndSend(_map["/camera_galaxy_node/start"]);
 
-    CheckAndSend(_map["/motor_node/scan"]);
+    CheckAndSend(_map["/motor_encoder_node/scan"]);
 
     CheckAndSleep(25);
 
     CheckAndSend(_map["/camera_galaxy_node/stop"]);
 
     CheckAndSend(_map["/gpio_raspberry_node/low"]);
+	CheckAndSend(_map["/motor_encoder_node/zero"]);
+	CheckAndSleep(5); //=1s 
+
+	RCLCPP_INFO(rclcpp::get_logger("rclcpp"), "_Execute() is over....");
 }
 catch(const std::exception& e)
 {
@@ -230,22 +236,37 @@ catch(...)
 
 void ScriptJson::_Sub(std_msgs::msg::String::UniquePtr ptr) try
 {
-    auto j = json::parse(ptr->data);
-    _id = j["context"]["id"];
-    _param = j["context"]["params"][0];
-
-    if(_future.valid() && _future.wait_for(0s) != std::future_status::ready)
+    RCLCPP_INFO(rclcpp::get_logger("rclcpp"), "_status is %d", _status);
+    if(_future.valid() && _future.wait_for(1s) != std::future_status::ready)
     {
         _PublishResult(-1);
+         RCLCPP_INFO(rclcpp::get_logger("rclcpp"), "thread is not ready....");
     }
-    else if(j["context"]["op"] == "measure")
-    {
-        _future = std::async(std::launch::async, &ScriptJson::_Execute, this);
-        _PublishStatus(STATUS_BUSY);
-    }
-    else
-    {
-        _PublishResult(-2);
+    else{
+        
+        if(_status == STATUS_READY)
+        {            
+            auto j = json::parse(ptr->data);            
+            _id = j["context"]["id"];            
+            _param = j["context"]["params"][0];
+            
+            if(j["context"]["op"] == "measure")
+            {		               		
+                RCLCPP_INFO(rclcpp::get_logger("rclcpp"), "[script_json]: id:%d, param:%s", _id, _param.c_str());
+                
+                _future = std::async(std::launch::async, &ScriptJson::_Execute, this);
+                _PublishStatus(STATUS_BUSY);
+            }
+            else
+            {
+                _PublishResult(-2);
+            }
+        }
+        else
+        {
+            _PublishResult(-1);
+            RCLCPP_INFO(rclcpp::get_logger("rclcpp"), "[script_json]: ignore request");
+        }
     }
 }
 catch(const std::exception& e)
@@ -259,8 +280,9 @@ catch(...)
 
 void ScriptJson::_SubResult(shared_interfaces::msg::Float64Array::UniquePtr ptr) try
 {
-    _PublishResult(0, ptr->data);
     _PublishStatus(STATUS_READY);
+    _PublishResult(0, ptr->data);    
+    RCLCPP_INFO(rclcpp::get_logger("rclcpp"), "is ready....");
 }
 catch(const std::exception& e)
 {
@@ -297,12 +319,17 @@ void ScriptJson::_PublishStatus(STATUS status)
     {
     case STATUS_READY:
         j["context"]["status"] = "ready";
+        _status = STATUS_READY;
         break;
     case STATUS_BUSY:
         j["context"]["status"] = "busy";
+		j["code"] = -1;
+        _status = STATUS_BUSY;
         break;
     case STATUS_ERROR:
         j["context"]["status"] = "error";
+		j["code"] = -3;
+        _status = STATUS_ERROR;
         break;
     }
 
@@ -337,12 +364,16 @@ void ScriptJson::_PublishResult(int code, const std::vector<double>& result)
     {
         if(result.empty())
         {
-            j["code"] = 3;
+            j["code"] = -3;
         }
         else
         {
             t["value"] = result[0];
-            if(_param == "TopPlateFlatness" || _param == "GroundFlatness" || _param == "SideWallFlatness")
+                        
+            RCLCPP_INFO(rclcpp::get_logger("rclcpp"), "result: %f, %f, %f, %f, %f, %f, %f, %f", 
+              result[0], result[1], result[2], result[3], result[4], result[5], result[6], result[7]);
+            
+            if(_param == "TopPlateFlatness" || _param == "GroundFlatness" || _param == "SideWallFlatness" )
             {
                 t["optional"]["a"] = result[1];
                 t["optional"]["b"] = result[2];

@@ -26,6 +26,7 @@ private:
     void _PublishResult(int code, const std::vector<double>& result = {});
 
 private:
+    int _status = -1;
     int _id;
     std::string _param;
     std::vector<std::string> _requiredNodes;

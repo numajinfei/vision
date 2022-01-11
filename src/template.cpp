@@ -11,7 +11,7 @@ using std::cout;
 using std::endl;
 using std::string;
 
-string ns, cn;
+string ns, cn, NS;
 
 bool Exists(const string& file)
 {
@@ -39,17 +39,30 @@ void CreateLaunch()
     mkdir(dir.c_str(), S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH);
     std::ofstream ofile(dir + ns + ".launch.py");
 
-    string content = R"----(import os
+    string content = R"----(# Copyright 2019 Zhushi Tech, Inc.
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+import os
 import yaml
 import launch
 from ament_index_python.packages import get_package_share_directory
-from launch import LaunchDescription
 from launch_ros.descriptions import ComposableNode
 from launch_ros.actions import ComposableNodeContainer
 
+
 def generate_launch_description():
     """Generate launch description with a component."""
-
     configFile = os.path.join(
         get_package_share_directory('xxx_yyy_zzz'),
         'config',
@@ -59,20 +72,19 @@ def generate_launch_description():
         configParams = yaml.safe_load(file)['xxx_yyy_zzz_node']['ros__parameters']
 
     node = ComposableNode(
-        package = 'xxx_yyy_zzz',
-        plugin = 'xxx_yyy_zzz::XxxYyyZzz',
-        parameters = [configParams])
+        package='xxx_yyy_zzz',
+        plugin='xxx_yyy_zzz::XxxYyyZzz',
+        parameters=[configParams])
 
     container = ComposableNodeContainer(
-        name = 'xxx_yyy_zzz_container',
-        namespace = '',
-        package = 'rclcpp_components',
-        executable = 'component_container',
-        composable_node_descriptions = [node],
-        output = 'screen')
+        name='xxx_yyy_zzz_container',
+        namespace='',
+        package='rclcpp_components',
+        executable='component_container',
+        composable_node_descriptions=[node],
+        output='screen')
 
-    return launch.LaunchDescription([container])
-)----";
+    return launch.LaunchDescription([container]))----";
 
     content = std::regex_replace(content, std::regex("xxx_yyy_zzz"), ns);
     content = std::regex_replace(content, std::regex("XxxYyyZzz"), cn);
@@ -90,7 +102,26 @@ void CreateHeader()
     auto file = dir + ns + ".hpp";
     std::ofstream ofile(file);
 
-    string content = R"----(#include "rclcpp/rclcpp.hpp"
+    string content = R"----(// Copyright 2019 Zhushi Tech, Inc.
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//     http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+
+#ifndef XXX_YYY_ZZZ__XXX_YYY_ZZZ_HPP_
+#define XXX_YYY_ZZZ__XXX_YYY_ZZZ_HPP_
+
+#include <memory>
+
+#include "rclcpp/rclcpp.hpp"
 #include "std_msgs/msg/string.hpp"
 #include "std_srvs/srv/trigger.hpp"
 
@@ -100,36 +131,40 @@ namespace xxx_yyy_zzz
 class XxxYyyZzz : public rclcpp::Node
 {
 public:
-    explicit XxxYyyZzz(const rclcpp::NodeOptions& options = rclcpp::NodeOptions());
-    ~XxxYyyZzz();
+  explicit XxxYyyZzz(const rclcpp::NodeOptions & options = rclcpp::NodeOptions());
+  virtual ~XxxYyyZzz();
 
 private:
-    void _Init();
-    void _InitializeParameters();
-    void _UpdateParameters();
-    void _Sub(std_msgs::msg::String::UniquePtr ptr);//TODO
-    void _Srv(const std::shared_ptr<std_srvs::srv::Trigger::Request> request, std::shared_ptr<std_srvs::srv::Trigger::Response> response);//TODO
+  void _Init();
+  void _InitializeParameters();
+  void _UpdateParameters();
+  void _Sub(std_msgs::msg::String::UniquePtr ptr);  // TODO(imp)
+  void _Srv(
+    const std::shared_ptr<std_srvs::srv::Trigger::Request> request,
+    std::shared_ptr<std_srvs::srv::Trigger::Response> response);  // TODO(imp)
 
 private:
-    const char* _pubName = "~/pub";//TODO
-    rclcpp::Publisher<std_msgs::msg::String>::SharedPtr _pub;
+  const char * _pubName = "~/pub";  // TODO(imp)
+  rclcpp::Publisher<std_msgs::msg::String>::SharedPtr _pub;
 
-    class _Impl;
-    std::unique_ptr<_Impl> _impl;
+  class _Impl;
+  std::unique_ptr<_Impl> _impl;
 
-    const char* _subName = "~/sub";//TODO
-    rclcpp::Subscription<std_msgs::msg::String>::SharedPtr _sub;
+  const char * _subName = "~/sub";  // TODO(imp)
+  rclcpp::Subscription<std_msgs::msg::String>::SharedPtr _sub;
 
-    const char* _srvName = "~/srv";//TODO
-    rclcpp::Service<std_srvs::srv::Trigger>::SharedPtr _srv;
+  const char * _srvName = "~/srv";  // TODO(imp)
+  rclcpp::Service<std_srvs::srv::Trigger>::SharedPtr _srv;
 
-    std::thread _init;
+  std::thread _init;
 };
 
-}
-)----";
+}  // namespace xxx_yyy_zzz
+
+#endif  // XXX_YYY_ZZZ__XXX_YYY_ZZZ_HPP_)----";
 
     content = std::regex_replace(content, std::regex("xxx_yyy_zzz"), ns);
+    content = std::regex_replace(content, std::regex("XXX_YYY_ZZZ"), NS);
     content = std::regex_replace(content, std::regex("XxxYyyZzz"), cn);
     ofile << content << endl;
 }
@@ -142,7 +177,23 @@ void CreateSource()
     mkdir(dir.c_str(), S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH);
     std::ofstream ofile(dir + ns + ".cpp");
 
-    string content = R"----(#include "xxx_yyy_zzz/xxx_yyy_zzz.hpp"
+    string content = R"----(// Copyright 2019 Zhushi Tech, Inc.
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//     http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+
+#include "xxx_yyy_zzz/xxx_yyy_zzz.hpp"
+
+#include <memory>
 
 namespace xxx_yyy_zzz
 {
@@ -150,37 +201,40 @@ namespace xxx_yyy_zzz
 class XxxYyyZzz::_Impl
 {
 public:
-    explicit _Impl(XxxYyyZzz* ptr) : _node(ptr)
-    {
-    }
+  explicit _Impl(XxxYyyZzz * ptr)
+  : _node(ptr)
+  {
+  }
 
-    ~_Impl()
-    {
-    }
+  ~_Impl()
+  {
+  }
 
 private:
-    XxxYyyZzz* _node;
+  XxxYyyZzz * _node;
 };
 
-XxxYyyZzz::XxxYyyZzz(const rclcpp::NodeOptions& options) : Node("xxx_yyy_zzz_node", options)
+XxxYyyZzz::XxxYyyZzz(const rclcpp::NodeOptions & options)
+: Node("xxx_yyy_zzz_node", options)
 {
-    _init = std::thread(&XxxYyyZzz::_Init, this);
+  _init = std::thread(&XxxYyyZzz::_Init, this);
 }
 
 XxxYyyZzz::~XxxYyyZzz()
 {
-    _init.join();
+  _init.join();
 
-    _srv.reset();
-    _sub.reset();
-    _impl.reset();
-    _pub.reset();
+  _srv.reset();
+  _sub.reset();
+  _impl.reset();
+  _pub.reset();
 
-    RCLCPP_INFO(rclcpp::get_logger("rclcpp"), "xxx_yyy_zzz destroyed successfully");
+  RCLCPP_INFO(this->get_logger(), "Destroyed successfully");
 }
 
-void XxxYyyZzz::_Init() try
+void XxxYyyZzz::_Init()
 {
+  try {
     _InitializeParameters();
 
     _UpdateParameters();
@@ -189,63 +243,65 @@ void XxxYyyZzz::_Init() try
 
     _impl = std::make_unique<_Impl>(this);
 
-    _sub = this->create_subscription<std_msgs::msg::String>(_subName, 10, std::bind(&XxxYyyZzz::_Sub, this, std::placeholders::_1));
+    _sub = this->create_subscription<std_msgs::msg::String>(
+      _subName,
+      10,
+      std::bind(&XxxYyyZzz::_Sub, this, std::placeholders::_1));
 
-    _srv = this->create_service<std_srvs::srv::Trigger>(_srvName, std::bind(&XxxYyyZzz::_Srv, this, std::placeholders::_1, std::placeholders::_2));
+    _srv = this->create_service<std_srvs::srv::Trigger>(
+      _srvName,
+      std::bind(&XxxYyyZzz::_Srv, this, std::placeholders::_1, std::placeholders::_2));
 
-    RCLCPP_INFO(rclcpp::get_logger("rclcpp"), "xxx_yyy_zzz initialized successfully");
-}
-catch(const std::exception& e)
-{
-    RCLCPP_ERROR(rclcpp::get_logger("rclcpp"), "Exception in xxx_yyy_zzz initializer: %s", e.what());
+    RCLCPP_INFO(this->get_logger(), "Initialized successfully");
+  } catch (const std::exception & e) {
+    RCLCPP_ERROR(this->get_logger(), "Exception in initializer: %s", e.what());
     rclcpp::shutdown();
-}
-catch(...)
-{
-    RCLCPP_ERROR(rclcpp::get_logger("rclcpp"), "Exception in xxx_yyy_zzz initializer: unknown");
+  } catch (...) {
+    RCLCPP_ERROR(this->get_logger(), "Exception in initializer: unknown");
     rclcpp::shutdown();
+  }
 }
 
-void XxxYyyZzz::_Sub(std_msgs::msg::String::UniquePtr /*ptr*/) try
+void XxxYyyZzz::_Sub(std_msgs::msg::String::UniquePtr /*ptr*/)
 {
-}
-catch(const std::exception& e)
-{
-    RCLCPP_ERROR(rclcpp::get_logger("rclcpp"), "Exception in xxx_yyy_zzz subscription: %s", e.what());
-}
-catch(...)
-{
-    RCLCPP_ERROR(rclcpp::get_logger("rclcpp"), "Exception in xxx_yyy_zzz subscription: unknown");
+  try {
+  } catch (const std::exception & e) {
+    RCLCPP_ERROR(this->get_logger(), "Exception in subscription: %s", e.what());
+  } catch (...) {
+    RCLCPP_ERROR(this->get_logger(), "Exception in subscription: unknown");
+  }
 }
 
-void XxxYyyZzz::_Srv(const std::shared_ptr<std_srvs::srv::Trigger::Request> /*request*/, std::shared_ptr<std_srvs::srv::Trigger::Response> /*response*/) try
+void XxxYyyZzz::_Srv(
+  const std::shared_ptr<std_srvs::srv::Trigger::Request>/*request*/,
+  std::shared_ptr<std_srvs::srv::Trigger::Response>/*response*/)
 {
-}
-catch(const std::exception& e)
-{
-    RCLCPP_ERROR(rclcpp::get_logger("rclcpp"), "Exception in xxx_yyy_zzz service: %s", e.what());
-}
-catch(...)
-{
-    RCLCPP_ERROR(rclcpp::get_logger("rclcpp"), "Exception in xxx_yyy_zzz service: unknown");
+  try {
+  } catch (const std::exception & e) {
+    RCLCPP_ERROR(this->get_logger(), "Exception in service: %s", e.what());
+  } catch (...) {
+    RCLCPP_ERROR(this->get_logger(), "Exception in service: unknown");
+  }
 }
 
 void XxxYyyZzz::_InitializeParameters()
 {
-    //this->declare_parameter("");
+  // this->declare_parameter("");
 }
 
 void XxxYyyZzz::_UpdateParameters()
 {
-    //this->get_parameter("", );
+  // this->get_parameter("", );
 }
 
-}
+}  // namespace xxx_yyy_zzz
 
 #include "rclcpp_components/register_node_macro.hpp"
 
-RCLCPP_COMPONENTS_REGISTER_NODE(xxx_yyy_zzz::XxxYyyZzz)
-)----";
+// Register the component with class_loader.
+// This acts as a sort of entry point, allowing the component to be discoverable when its library
+// is being loaded into a running process.
+RCLCPP_COMPONENTS_REGISTER_NODE(xxx_yyy_zzz::XxxYyyZzz))----";
 
     content = std::regex_replace(content, std::regex("xxx_yyy_zzz"), ns);
     content = std::regex_replace(content, std::regex("XxxYyyZzz"), cn);
@@ -283,11 +339,22 @@ find_package(std_srvs REQUIRED)
 
 add_library(xxx_yyy_zzz SHARED src/xxx_yyy_zzz.cpp)
 
-target_include_directories(xxx_yyy_zzz PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include> $<INSTALL_INTERFACE:include>)
+target_include_directories(xxx_yyy_zzz
+  PUBLIC
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+    $<INSTALL_INTERFACE:include>
+)
 
-ament_target_dependencies(xxx_yyy_zzz rclcpp rclcpp_components std_srvs)
+ament_target_dependencies(xxx_yyy_zzz
+  rclcpp
+  rclcpp_components
+  std_srvs
+)
 
-rclcpp_components_register_node(xxx_yyy_zzz PLUGIN "xxx_yyy_zzz::XxxYyyZzz" EXECUTABLE xxx_yyy_zzz_node)
+rclcpp_components_register_node(xxx_yyy_zzz
+  PLUGIN "xxx_yyy_zzz::XxxYyyZzz"
+  EXECUTABLE xxx_yyy_zzz_node
+)
 
 if(BUILD_TESTING)
   find_package(ament_lint_auto REQUIRED)
@@ -359,6 +426,10 @@ int main(int argc, char * argv[])
     for(int i = 1; i < argc; ++i)
     {
         string str(argv[i]);
+        std::transform(str.begin(), str.end(), str.begin(), ::toupper);
+        if(i != 1) NS += '_';
+        NS += str;
+
         std::transform(str.begin(), str.end(), str.begin(), ::tolower);
         if(i != 1) ns += '_';
         ns += str;

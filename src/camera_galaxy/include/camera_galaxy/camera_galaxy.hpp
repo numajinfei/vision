@@ -28,18 +28,18 @@ namespace camera_galaxy
 class CameraGalaxy : public rclcpp::Node
 {
 public:
-    explicit CameraGalaxy(const rclcpp::NodeOptions& options = rclcpp::NodeOptions());
-    ~CameraGalaxy();
+  explicit CameraGalaxy(const rclcpp::NodeOptions & options = rclcpp::NodeOptions());
+  virtual ~CameraGalaxy();
 
-    void PublishL(sensor_msgs::msg::Image::UniquePtr& ptr)
-    {
-        _pubL->publish(std::move(ptr));
-    }
+  void PublishL(sensor_msgs::msg::Image::UniquePtr & ptr)
+  {
+    _pubL->publish(std::move(ptr));
+  }
 
-    void PublishR(sensor_msgs::msg::Image::UniquePtr& ptr)
-    {
-        _pubR->publish(std::move(ptr));
-    }
+  void PublishR(sensor_msgs::msg::Image::UniquePtr & ptr)
+  {
+    _pubR->publish(std::move(ptr));
+  }
 
 private:
   void _Init();
@@ -51,22 +51,22 @@ private:
     std::shared_ptr<std_srvs::srv::Trigger::Response> response);
 
 private:
-    const char* _pubLName = "~/image_l";
-    rclcpp::Publisher<sensor_msgs::msg::Image>::SharedPtr _pubL;
+  const char * _pubLName = "~/image_l";
+  rclcpp::Publisher<sensor_msgs::msg::Image>::SharedPtr _pubL;
 
-    const char* _pubRName = "~/image_r";
-    rclcpp::Publisher<sensor_msgs::msg::Image>::SharedPtr _pubR;
+  const char * _pubRName = "~/image_r";
+  rclcpp::Publisher<sensor_msgs::msg::Image>::SharedPtr _pubR;
 
-    class _Impl;
-    std::unique_ptr<_Impl> _impl;
+  class _Impl;
+  std::unique_ptr<_Impl> _impl;
 
-    const char* _srvStartName = "~/start";
-    rclcpp::Service<std_srvs::srv::Trigger>::SharedPtr _srvStart;
+  const char * _srvStartName = "~/start";
+  rclcpp::Service<std_srvs::srv::Trigger>::SharedPtr _srvStart;
 
-    const char* _srvStopName = "~/stop";
-    rclcpp::Service<std_srvs::srv::Trigger>::SharedPtr _srvStop;
+  const char * _srvStopName = "~/stop";
+  rclcpp::Service<std_srvs::srv::Trigger>::SharedPtr _srvStop;
 
-    std::thread _init;
+  std::thread _init;
 };
 
 }  // namespace camera_galaxy

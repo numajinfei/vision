@@ -84,7 +84,7 @@ private:
           _Publish();
           std::chrono::steady_clock::time_point end_point = std::chrono::steady_clock::now();
           auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(end_point - start_point);
-          std::cout << "[laser_line_collect] spend time: " << duration.count() << "ms" << std::endl;
+          std::cout << "[" << _node->get_name() << "]" << ": spend time: " << duration.count() << "ms" << std::endl;
           test_time = true;
 
         } 

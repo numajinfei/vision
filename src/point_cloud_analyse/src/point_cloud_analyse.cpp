@@ -332,7 +332,7 @@ public:
 
   std::vector<double> CalculatePlaneFlat(pcl::PointCloud<pcl::PointXYZI>::Ptr cloud)
   {
-    Save(cloud, "/home/ubuntu/http_server/test_pcd_ori.txt");
+    Save(cloud, "/home/ubuntu/http_server/pcd_origin.txt");
     // RCLCPP_INFO(_node -> get_logger(), "[calculatePlaneFlat]: cloud size: %d",cloud->size());
     // pcl::PointCloud<pcl::PointXYZI>::Ptr sorCloud(new pcl::PointCloud<pcl::PointXYZI>);
     pcl::PointCloud<pcl::PointXYZI>::Ptr radCloud(new pcl::PointCloud<pcl::PointXYZI>); 
@@ -347,7 +347,7 @@ public:
     std::vector<pcl::PointIndices> regions;
     Segment(radCloud, regions);
     if (regions.empty()) {
-      Save(radCloud, "/home/ubuntu/http_server/test_pcd5.txt");
+      Save(radCloud, "/home/ubuntu/http_server/pcd_origin.txt");
       throw std::runtime_error("CalculatePlaneFlat: no planes");
     }
 
@@ -371,7 +371,7 @@ public:
     FilterByIntensity(cloud0,conCloud,0.002);
     // RCLCPP_INFO(_node -> get_logger(), "conCloud size: %d" ,conCloud->size());
     // ConditionRemoval(cloud0,conCloud,-2.0,2.0);
-    Save(cloud0, "/home/ubuntu/http_server/test_pcd5.txt");
+    Save(cloud0, "/home/ubuntu/http_server/pcd_analyse.txt");
     Save(conCloud, "/home/ubuntu/http_server/test_pcd_con.txt");
     
     std::vector<double> v;
@@ -400,6 +400,7 @@ public:
 
     std::vector<double> CalculatePlaneHV(pcl::PointCloud<pcl::PointXYZI>::Ptr cloud, bool vertical)
     {
+        Save(cloud, "/home/ubuntu/http_server/pcd_origin.txt");
         //pcl::PointCloud<pcl::PointXYZI>::Ptr cloud_grid(new pcl::PointCloud<pcl::PointXYZI>);
         std::vector<pcl::PointIndices> regions;
         Segment(cloud, regions);
@@ -407,7 +408,7 @@ public:
 
         if(regions.empty())
         {
-            Save(cloud, "/home/ubuntu/http_server/test_pcd5.txt");
+            Save(cloud, "/home/ubuntu/http_server/pcd_origin.txt");
             throw std::runtime_error("CalculatePlaneFlat: no planes");
         }
 
@@ -423,7 +424,7 @@ public:
             p.intensity = pcl::pointToPlaneDistanceSigned<pcl::PointXYZI>(p, c0.values[0], c0.values[1], c0.values[2], c0.values[3]);
         }
 
-        Save(cloud0, "/home/ubuntu/http_server/test_pcd5.txt");
+        Save(cloud0, "/home/ubuntu/http_server/pcd_analyse.txt");
 
         Eigen::Affine3f t,r;
         
@@ -463,11 +464,12 @@ public:
 
   std::vector<double> CalculateIncludedAngle(pcl::PointCloud<pcl::PointXYZI>::Ptr cloud)
   {
+    Save(cloud, "/home/ubuntu/http_server/pcd_origin.txt");
     std::vector<pcl::PointIndices> regions;
     Segment(cloud, regions);
 
     if (regions.size() < 2) {
-      Save(cloud, "/home/ubuntu/http_server/test_pcd5.txt");
+      Save(cloud, "/home/ubuntu/http_server/pcd_origin.txt");
       throw std::runtime_error("CalculateIncludedAngle: not enough planes");
     }
 
@@ -480,7 +482,7 @@ public:
     auto c1 = Plane(cloud1);
 
     *cloud0 += *cloud1;
-    Save(cloud0, "/home/ubuntu/http_server/test_pcd5.txt");
+    Save(cloud0, "/home/ubuntu/http_server/pcd_analyse.txt");
 
     /*auto msg = std::make_unique<sensor_msgs::msg::PointCloud2>();
     pcl::toROSMsg(*cloud0, *msg);
