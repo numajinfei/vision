@@ -4,12 +4,17 @@
  * @Author: hw
  * @Date: 2021-12-20 13:23:58
  * @LastEditors: hw
- * @LastEditTime: 2022-01-10 08:55:57
+ * @LastEditTime: 2022-01-11 17:25:12
 -->
-# 1. vision
+# 1. production category:
+featureA: binocular 
+- camera basler
+- motor encoder
+
+# 2. vision
 vision probe project，including code testing, build, CI/CD and release
 
-# 2. docker run command:
+# 3. docker run command:
 ## 1. docker container start:
 - ros2_test:
     ```shell
