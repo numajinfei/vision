@@ -29,9 +29,9 @@ using namespace std::chrono_literals;
 using sensor_msgs::msg::Image;
 using std_srvs::srv::Trigger;
 
-void GX_STDC _OnFrameCallbackFun(GX_FRAME_CALLBACK_PARAM * pFrame)
+void GX_STDC _OnFrameCallbackFun(GX_FRAME_CALLBACK_PARAM * pFrame) try
 {
-  try {
+  
     if (pFrame->status != GX_FRAME_STATUS_SUCCESS) {
       throw std::runtime_error("Callback pFrame status error");
     }

@@ -20,9 +20,10 @@ def generate_launch_description():
     node1 = ComposableNode(
         package = 'camera_galaxy',
         plugin = 'camera_galaxy::CameraGalaxy',
+        name = '/camera_node',
         parameters = [configParams1],
-        remappings = [('~/image_l', '/camera_node/image_l')],
-        remappings = [('~/image_r', '/camera_node/image_r')],
+        #remappings = [('~/image_l', '/camera_node/image_l')],
+        #remappings = [('~/image_r', '/camera_node/image_r')],
         extra_arguments=[{'use_intra_process_comms': True}])
 
     configFile2 = os.path.join(

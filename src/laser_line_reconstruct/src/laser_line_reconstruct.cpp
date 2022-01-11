@@ -106,7 +106,7 @@ private:
     const auto & centerL = ptrL->center;
     const auto & centerR = ptrR->center;
     // std::cout << "[" << _node->get_name() << "]" << ": centerL size: " << centerL.size() << "; centerR size: " << centerR.size() <<std::endl;
-    cv::waitKey(5);
+    // cv::waitKey(5);
 
     _pL.clear();
     _pR.clear();
@@ -307,7 +307,7 @@ private:
     if (idL == idR)
     {
       // std::cout<<"_deqL.id: " << idL << " = _deqR.id: " << idR <<std::endl;
-       cv::waitKey(5);
+      //  cv::waitKey(5);
       _PopFront(pL, pR);
       return true;
     } 
@@ -315,12 +315,12 @@ private:
     {
 
         // std::cout<<"_deqL.id: " << idL << " > _deqR.id: " << idR <<std::endl;
-         cv::waitKey(5);
+        //  cv::waitKey(5);
         for (auto iter = _deqR.begin(); iter != _deqR.end(); ++iter)
         {
             auto idT = std::stoi((*iter)->header.frame_id);
             // std::cout<<"idT: " << idT << std::endl;
-            cv::waitKey(5);
+            // cv::waitKey(5);
             if(idT == -1)
             {
                   _deqR.erase(_deqR.begin(), iter);
@@ -329,7 +329,7 @@ private:
             if (idL == idT)
             {
                 std::cout<<"_deqR.id:"<<(*iter)->header.frame_id<<std::endl;
-                 cv::waitKey(5);
+                //  cv::waitKey(5);
                 _deqR.erase(_deqR.begin(), iter);
                 _PopFront(pL, pR);
                 return true;
@@ -339,12 +339,12 @@ private:
     else if (idR > idL && idL > 0)
     {
         std::cout<<"_deqR.id: " << idR << " > _deqL.id: " << idL <<std::endl;
-         cv::waitKey(5);
+        //  cv::waitKey(5);
         for (auto iter = _deqL.begin(); iter != _deqL.end(); ++iter)
         {
             auto idT = std::stoi((*iter)->header.frame_id);
             std::cout<<"idT: " << idT << std::endl;
-            cv::waitKey(5);
+            // cv::waitKey(5);
             if(idT == -1)
             {
                 _deqL.erase(_deqL.begin(), iter);
@@ -353,7 +353,7 @@ private:
             else if (idR == idT)
             {
                 std::cout<<"_deqL.id:"<<(*iter)->header.frame_id<<std::endl;
-                 cv::waitKey(5);
+                //  cv::waitKey(5);
                 _deqL.erase(_deqL.begin(), iter);
                 _PopFront(pL, pR);
                 return true;
@@ -363,7 +363,7 @@ private:
     else if(idR == -1 || idL == -1)
     {
         std::cout<<"idR == -1 || idL == -1, _deqL.clear(), _deqR.clear()"<<std::endl;
-         cv::waitKey(5);
+        //  cv::waitKey(5);
         _PopFront(pL, pR);
         _deqL.clear();
         _deqR.clear();
