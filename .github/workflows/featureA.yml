@@ -28,12 +28,13 @@ jobs:
           ref: featureA
           #fetch-depth: 2
 
-      - name: Cache ros2 build
-        id: cache-test
+      - name: Cache Docker layers
         uses: actions/cache@v2
-        with: 
-          path: ~/.cahe/cache-ros2-test
-          key: ${{ runner.os }}-cache-ros2-test
+        with:
+          path: /tmp/.buildx-cache
+          key: ${{ runner.os }}-buildx-${{ github.sha }}
+          restore-keys: |
+            ${{ runner.os }}-buildx-
        
       #- name: Check if submodule is on most recent master commit
       #  uses: jtmullen/submodule-branch-check-action@v1
@@ -62,7 +63,9 @@ jobs:
           file: ./Dockerfile/ros_featureA_test.Dockerfile
           platforms: linux/amd64,linux/arm64
           push: true
-          tags: ${{ secrets.DOCKER_HUB_USERNAME }}/ros2_feature_a_test 
+          tags: ${{ secrets.DOCKER_HUB_USERNAME }}/ros2_feature_a_test
+          cache-from: type=local,src=/tmp/.buildx-cache
+          cache-to: type=local,dest=/tmp/.buildx-cache 
           
   featureA-deploy-ros:
     name: FeatureA deploy ros
@@ -76,12 +79,13 @@ jobs:
           ref: featureA     
           #fetch-depth: 2
 
-      - name: Cache deploy
-        id: cache-deploy
+      - name: Cache Docker layers
         uses: actions/cache@v2
-        with: 
-          path: ~/.cahe/cache-ros2-test
-          key: ${{ runner.os }}-cache-ros2-test
+        with:
+          path: /tmp/.buildx-cache
+          key: ${{ runner.os }}-buildx-${{ github.sha }}
+          restore-keys: |
+            ${{ runner.os }}-buildx-
 
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v1
@@ -104,4 +108,6 @@ jobs:
           platforms: linux/amd64,linux/arm64
           push: true
           tags: ${{ secrets.DOCKER_HUB_USERNAME }}/ros2_feature_a_deploy
+          cache-from: type=local,src=/tmp/.buildx-cache
+          cache-to: type=local,dest=/tmp/.buildx-cache
 

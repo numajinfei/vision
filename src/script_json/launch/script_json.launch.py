@@ -1,3 +1,4 @@
+
 import os
 import yaml
 import launch
@@ -12,7 +13,7 @@ def generate_launch_description():
     configFile = os.path.join(
         get_package_share_directory('script_json'),
         'config',
-        'params.yaml')
+        'params_basler.yaml')
 
     with open(configFile, 'r') as file:
         configParams = yaml.safe_load(file)['script_json_node']['ros__parameters']
