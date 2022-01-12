@@ -29,10 +29,11 @@ jobs:
           #fetch-depth: 2
 
       - name: Cache ros2 build
-        id: cache-build
+        id: cache-test
         uses: actions/cache@v2
         with: 
-          path: ${{ github.workspace }}/cache-build
+          path: ~/.cahe/cache-ros2-test
+          key: ${{ runner.os }}-cache-ros2-test
        
       #- name: Check if submodule is on most recent master commit
       #  uses: jtmullen/submodule-branch-check-action@v1
