@@ -27,7 +27,7 @@ camera_basler_node_l:
     serial_number_enable: false            #boolean
     camera_number: 1                      #const int 
     # camera_serial_number: "40146421"            #string
-    camera_serial_number: "40138314"            #string
+    camera_serial_number: "40146411"            #string
     # camera_2_serial_number: "40136629"            #string  
     hardware_trigger_source: "Line4"      #string(Line1,2,3,4)
     hardware_trigger_edge: "RisingEdge"      #string(RisingEdge,FallingEdge,AnyEdge,LevelHigh,LevelLow)
@@ -54,7 +54,7 @@ camera_basler_node_r:
     serial_number_enable: false            #boolean
     camera_number: 1                      #const int 
     # camera_1_serial_number: "40138314"            #string
-    camera_serial_number: "40136629"            #string  
+    camera_serial_number: "40146416"            #string  
     hardware_trigger_source: "Line4"      #string(Line1,2,3,4)
     hardware_trigger_edge: "RisingEdge"      #string(RisingEdge,FallingEdge,AnyEdge,LevelHigh,LevelLow)
 

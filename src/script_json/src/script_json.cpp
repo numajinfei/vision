@@ -120,6 +120,8 @@ bool ScriptJson::_IsNodesReady()
     {
         auto iter = std::find_if(graph.begin(), graph.end(), [&e](const std::string& g)
         {
+            //RCLCPP_INFO(rclcpp::get_logger("rclcpp"),"g: %s, e: %s", g.c_str(), e.c_str());
+
             return EndsWith(g, e);
         });
 
