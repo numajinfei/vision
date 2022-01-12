@@ -544,8 +544,11 @@ private:
         // Before using any pylon methods, the pylon runtime must be initialized.
         PylonInitialize();         
 
-        // if(_serial_number_enable)
-        //     _getSerialNumber();   
+        if(_serial_number_enable)
+        {
+            _getSerialNumber();  
+            RCLCPP_WARN(rclcpp::get_logger("rclcpp"),"--->: to get camera's serial number, exit after the Node is executed"); 
+        }
         
         //enumerate devices and start HardwareTrigger mode to grab
         {
@@ -712,7 +715,9 @@ private:
             std::cout << "Using device " << cameras[i].GetDeviceInfo().GetModelName() << std::endl;
             std::cout << "Serial Number : "                
                 << cameras[i].GetDeviceInfo().GetSerialNumber() << std::endl;
-        }                     
+        }       
+
+        _Release();              
     }
 
 private:
