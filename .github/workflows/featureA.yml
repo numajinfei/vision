@@ -80,7 +80,8 @@ jobs:
         id: cache-deploy
         uses: actions/cache@v2
         with: 
-          path: ${{ github.workspace }}/cache-deploy
+          path: ~/.cahe/cache-ros2-test
+          key: ${{ runner.os }}-cache-ros2-test
 
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v1
