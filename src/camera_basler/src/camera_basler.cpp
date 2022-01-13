@@ -272,8 +272,8 @@ public:
                     CEnumParameter(nodemap, "TriggerSource").SetValue("Line4");
                     std::cout<<"TriggerSource: Line4"<<std::endl;
 					
-                    CEnumParameter(nodemap, "TriggerActivation").SetValue("AnyEdge");
-                    std::cout<<"TriggerActivation: AnyEdge"<<std::endl;
+                    CEnumParameter(nodemap, "TriggerActivation").SetValue("LevelHigh");
+                    std::cout<<"TriggerActivation: LevelHigh"<<std::endl;
 
                     break;
                 }
