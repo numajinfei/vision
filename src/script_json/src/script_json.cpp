@@ -211,7 +211,7 @@ void ScriptJson::_Execute() try
 
         CheckAndSend(_map["/camera_node/start"]);
         CheckAndSend(_map["/camera_node_r/start"]);
-        CheckAndSend(_map["/motor_node/center"]);
+        CheckAndSend(_map["/motor_encoder_node/center"]);
         CheckAndSend(_map["/gpio_raspberry_node/high"]);
         CheckAndSleep(5);//=1S
         CheckAndSend(_map["/gpio_raspberry_node/grab_once"]);

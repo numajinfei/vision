@@ -217,11 +217,11 @@ GpioRaspberry::GpioRaspberry(const rclcpp::NodeOptions& options) : Node("gpio_ra
         }
     });
 
-    _clientEnableSaveL = this -> create_client<std_srvs::srv::Trigger>("/camera_basler_node_l/enableSave");
-    _clientDisableSaveL = this -> create_client<std_srvs::srv::Trigger>("/camera_basler_node_l/disableSave");
+    _clientEnableSaveL = this -> create_client<std_srvs::srv::Trigger>("/camera_node/enableSave");
+    _clientDisableSaveL = this -> create_client<std_srvs::srv::Trigger>("/camera_node/disableSave");
 
-    _clientEnableSaveR = this -> create_client<std_srvs::srv::Trigger>("/camera_basler_node_r/enableSave");
-    _clientDisableSaveR = this -> create_client<std_srvs::srv::Trigger>("/camera_basler_node_r/disableSave");
+    _clientEnableSaveR = this -> create_client<std_srvs::srv::Trigger>("/camera_node_r/enableSave");
+    _clientDisableSaveR = this -> create_client<std_srvs::srv::Trigger>("/camera_node_r/disableSave");
 
     RCLCPP_INFO(rclcpp::get_logger("rclcpp"), "gpio_raspberry initialized successfully");
 }
