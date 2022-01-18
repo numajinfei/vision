@@ -183,7 +183,7 @@ GpioRaspberry::GpioRaspberry(const rclcpp::NodeOptions& options) : Node("gpio_ra
                                     
             response->success = true;
             response->message = "Success: Grab Stop";
-            RCLCPP_INFO(rclcpp::get_logger("rclcpp"), "[_srvGrabStart-2]: %s", response->message);
+            RCLCPP_INFO(rclcpp::get_logger("rclcpp"), "[_srvGrabStart-2]: %s", response->message.c_str());
         }
         catch(const std::exception& e)
         {

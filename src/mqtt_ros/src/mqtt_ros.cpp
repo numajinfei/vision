@@ -52,7 +52,7 @@ public:
     {
         auto msg = std::make_unique<std_msgs::msg::String>();
         msg->data = str;
-        std::cout << "msg is %s \n" << str;
+        //std::cout << "msg is %s \n" << str;
         RCLCPP_INFO(rclcpp::get_logger("rclcpp"),"[mqtt_ros] publish ros message: %s",str.c_str());
         _node->Publish(msg);
     }
