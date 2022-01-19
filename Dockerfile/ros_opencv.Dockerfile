@@ -83,4 +83,3 @@ RUN wget -O opencv.tar.gz https://github.com/opencv/opencv/archive/refs/tags/4.5
   && rm -r opencv-4.5.2 build \
   && echo "/opt/opencv/lib" >> /etc/ld.so.conf.d/OpenCV.conf \
   && ldconfig
-

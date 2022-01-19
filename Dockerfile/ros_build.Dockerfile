@@ -29,7 +29,7 @@ RUN wget -O paho.mqtt.c.tar.gz https://github.com/eclipse/paho.mqtt.c/archive/re
     -D PAHO_WITH_SSL=OFF \
     -D PAHO_HIGH_PERFORMANCE=ON \
     -S paho.mqtt.c-1.3.9/ \
-    -B build/ \
+    -Bbuild/ \
   && cmake --build build/ --target install \
   && rm -r paho.mqtt.c-1.3.9 build
 
@@ -42,7 +42,7 @@ RUN wget -O paho.mqtt.cpp.tar.gz https://github.com/eclipse/paho.mqtt.cpp/archiv
     #-D PAHO_BUILD_STATIC=TRUE \
     -D PAHO_WITH_SSL=OFF \
     -S paho.mqtt.cpp-1.2.0/ \
-    -B build/ \
+    -Bbuild/ \
   && cmake --build build/ --target install \
   && echo "/opt/mqtt/lib" >> /etc/ld.so.conf.d/mqtt.conf \
   && mkdir -p /opt/mqtt/lib \

@@ -6,9 +6,9 @@ name: featureA test and deploy' actions
 on:
   # Triggers the workflow on push or pull request events but only for the master branch
   push:
-    branches: [ featureA]
+    branches: [ featureA ]
   pull_request:
-    branches: [ featureA]
+    branches: [ featureA ]
 
   # Allows you to run this workflow manually from the Actions tab
   #workflow_dispatch:
@@ -63,9 +63,9 @@ jobs:
           file: ./Dockerfile/ros_featureA_test.Dockerfile
           platforms: linux/amd64,linux/arm64
           push: true
-          tags: ${{ secrets.DOCKER_HUB_USERNAME }}/ros2_feature_a_test
+          tags: ${{ secrets.DOCKER_HUB_USERNAME }}/ros2:feature_a_test
           cache-from: type=local,src=/tmp/.buildx-cache
-          cache-to: type=local,dest=/tmp/.buildx-cache 
+          cache-to: type=local,dest=/tmp/.buildx-cache-new
           
   featureA-deploy-ros:
     name: FeatureA deploy ros
@@ -107,7 +107,7 @@ jobs:
           file: ./Dockerfile/ros_featureA_deploy.Dockerfile
           platforms: linux/amd64,linux/arm64
           push: true
-          tags: ${{ secrets.DOCKER_HUB_USERNAME }}/ros2_feature_a_deploy
+          tags: ${{ secrets.DOCKER_HUB_USERNAME }}/ros2:feature_a_deploy
           cache-from: type=local,src=/tmp/.buildx-cache
-          cache-to: type=local,dest=/tmp/.buildx-cache
+          cache-to: type=local,dest=/tmp/.buildx-cache-new
 

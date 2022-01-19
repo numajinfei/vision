@@ -8,7 +8,6 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
   wget \
   && rm -rf /var/lib/apt/lists/*
 
-
 # Install basler pylon6.2
 RUN if [ "$TARGETPLATFORM" = "linux/amd64" ]; then \
     wget -O pylon.tar.gz https://www.baslerweb.com/fp-1615275588/media/a_b_testing_1/pylon_6.2.0.21487_x86_64_setup.tar.gz \
