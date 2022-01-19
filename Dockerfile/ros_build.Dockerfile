@@ -1,7 +1,7 @@
-FROM jadehu/ros2_opencv AS opencv
-FROM jadehu/ros2_basler AS basler
-FROM jadehu/ros2_galaxy AS galaxy
-FROM jadehu/ros2_pcl AS pcl
+FROM jadehu/ros2:opencv AS opencv
+FROM jadehu/ros2:basler AS basler
+FROM jadehu/ros2:galaxy AS galaxy
+FROM jadehu/ros2:pcl AS pcl
 LABEL maintainer="numajinfei@163.com"
 
 FROM ros:galactic
