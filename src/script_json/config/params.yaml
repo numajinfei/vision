@@ -1,6 +1,7 @@
 script_json_node:
   ros__parameters:
-    required_nodes: ['gpio_raspberry_node', 'motor_encoder_node', 'inclinometer_node', 'mqtt_ros_node', 'camera_node', 'laser_line_center_node_l', 'laser_line_center_node_r', 'laser_line_reconstruct_node', 'point_cloud_collect_node', 'point_cloud_analyse_node']
-    gpio_raspberry_node: ['high', 'low', 'toggle']
+    required_nodes: ['gpio_raspberry_node', 'motor_encoder_node', 'inclinometer_node', 'mqtt_ros_node', 'camera_node', 'camera_node_r', 'laser_line_center_node_l', 'laser_line_center_node_r', 'laser_line_reconstruct_node', 'point_cloud_collect_node', 'point_cloud_analyse_node']
+    gpio_raspberry_node: ['high', 'low', 'toggle', 'grab_start', 'grab_stop', 'grab_once']
     motor_encoder_node: ['zero', 'center', 'scan']
     camera_node: ['start', 'stop']
+    camera_node_r: ['start', 'stop']

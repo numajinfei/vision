@@ -63,7 +63,7 @@ jobs:
           file: ./Dockerfile/ros_opencv.Dockerfile
           platforms: linux/amd64,linux/arm64
           push: true
-          tags: ${{ secrets.DOCKER_HUB_USERNAME }}/ros2_opencv
+          tags: ${{ secrets.DOCKER_HUB_USERNAME }}/ros2:opencv
           #cache-from: type=local,src=/tmp/.buildx-cache
           #cache-to: type=local,dest=/tmp/.buildx-cache
           
@@ -112,7 +112,7 @@ jobs:
           file: ./Dockerfile/ros_pcl.Dockerfile
           platforms: linux/amd64,linux/arm64
           push: true
-          tags: ${{ secrets.DOCKER_HUB_USERNAME }}/ros2_pcl
+          tags: ${{ secrets.DOCKER_HUB_USERNAME }}/ros2:pcl
           #cache-from: type=local,src=/tmp/.buildx-cache
           #cache-to: type=local,dest=/tmp/.buildx-cache
           
@@ -162,7 +162,7 @@ jobs:
           file: ./Dockerfile/ros_basler.Dockerfile
           platforms: linux/amd64,linux/arm64
           push: true
-          tags: ${{ secrets.DOCKER_HUB_USERNAME }}/ros2_basler
+          tags: ${{ secrets.DOCKER_HUB_USERNAME }}/ros2:basler
           #cache-from: type=local,src=/tmp/.buildx-cache
           #cache-to: type=local,dest=/tmp/.buildx-cache
           
@@ -211,9 +211,10 @@ jobs:
           file: ./Dockerfile/ros_galaxy.Dockerfile
           platforms: linux/amd64,linux/arm64
           push: true
-          tags: ${{ secrets.DOCKER_HUB_USERNAME }}/ros2_galaxy 
+          tags: ${{ secrets.DOCKER_HUB_USERNAME }}/ros2:galaxy 
           #cache-from: type=local,src=/tmp/.buildx-cache
           #cache-to: type=local,dest=/tmp/.buildx-cache         
+
           
   build-ros-build:
     name: Build ros build
@@ -226,13 +227,13 @@ jobs:
         with:
           fetch-depth: 2
 
-      #- name: Cache Docker layers
-      #  uses: actions/cache@v2
-      #  with:
-      #    path: /tmp/.buildx-cache
-      #    key: ${{ runner.os }}-buildx-${{ github.sha }}
-      #    restore-keys: |
-      #      ${{ runner.os }}-buildx-
+      - name: Cache Docker layers
+        uses: actions/cache@v2
+        with:
+          path: /tmp/.buildx-cache
+          key: ${{ runner.os }}-buildx-${{ github.sha }}
+          restore-keys: |
+            ${{ runner.os }}-buildx-
           
       - name: Get specific changed files
         id: changed-files-specific
@@ -266,6 +267,6 @@ jobs:
           file: ./Dockerfile/ros_build.Dockerfile
           platforms: linux/amd64,linux/arm64
           push: true
-          tags: ${{ secrets.DOCKER_HUB_USERNAME }}/ros2_build 
-          #cache-from: type=local,src=/tmp/.buildx-cache
-          #cache-to: type=local,dest=/tmp/.buildx-cache        
+          tags: ${{ secrets.DOCKER_HUB_USERNAME }}/ros2:build 
+          cache-from: type=local,src=/tmp/.buildx-cache
+          cache-to: type=local,dest=/tmp/.buildx-cache-new      

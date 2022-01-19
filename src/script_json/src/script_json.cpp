@@ -120,6 +120,8 @@ bool ScriptJson::_IsNodesReady()
     {
         auto iter = std::find_if(graph.begin(), graph.end(), [&e](const std::string& g)
         {
+            //RCLCPP_INFO(rclcpp::get_logger("rclcpp"),"g: %s, e: %s", g.c_str(), e.c_str());
+
             return EndsWith(g, e);
         });
 
@@ -202,24 +204,52 @@ void ScriptJson::_Execute() try
     {
         _paramClient->set_parameters({rclcpp::Parameter("mode", 3)});
     }
+    else if(_param == "StraightnessT")
+    {
+        _paramClient->set_parameters({rclcpp::Parameter("mode", 4)});
+       
+
+        CheckAndSend(_map["/camera_node/start"]);
+        CheckAndSend(_map["/camera_node_r/start"]);
+        CheckAndSend(_map["/motor_encoder_node/center"]);
+        CheckAndSend(_map["/gpio_raspberry_node/high"]);
+        CheckAndSleep(5);//=1S
+        CheckAndSend(_map["/gpio_raspberry_node/grab_once"]);
+        CheckAndSleep(5);//=1S
+        CheckAndSend(_map["/camera_node/stop"]);    
+        CheckAndSend(_map["/camera_node_r/stop"]);
+        CheckAndSend(_map["/gpio_raspberry_node/low"]);
+        CheckAndSend(_map["/motor_encoder_node/zero"]);
+        CheckAndSleep(10);//=2S
+
+        return;
+    }
+    else if( _param == "PlaneFlatnessT")
+    {
+        _paramClient->set_parameters({rclcpp::Parameter("mode", 5)});
+    }
     else
     {
         _PublishStatus(STATUS_READY);
         throw std::runtime_error("Unsupported operation");
     }
 
+	CheckAndSend(_map["/camera_node/start"]);
+    CheckAndSend(_map["/camera_node_r/start"]);
     CheckAndSend(_map["/motor_encoder_node/zero"]);
 
     CheckAndSend(_map["/gpio_raspberry_node/high"]);
 
     CheckAndSleep(5);
 
-    CheckAndSend(_map["/camera_node/start"]);
-    CheckAndSend(_map["/camera_node_r/start"]);
+    
 
     CheckAndSend(_map["/motor_encoder_node/scan"]);
+	CheckAndSend(_map["/gpio_raspberry_node/grab_start"]);
+	CheckAndSleep(20);//=4S
 
-    CheckAndSleep(25);
+    CheckAndSend(_map["/gpio_raspberry_node/grab_stop"]); 
+    CheckAndSleep(5);//=1S
 
     CheckAndSend(_map["/camera_node/stop"]);
     CheckAndSend(_map["/camera_node_r/stop"]);

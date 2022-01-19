@@ -78,9 +78,8 @@ RUN wget -O opencv.tar.gz https://github.com/opencv/opencv/archive/refs/tags/4.5
     -D WITH_XIMEA:BOOL=OFF \
     -D WITH_XINE:BOOL=OFF \
     -S opencv-4.5.2/ \
-    -B build/ \
+    -Bbuild/ \
   && cmake --build build/ --target install \
   && rm -r opencv-4.5.2 build \
   && echo "/opt/opencv/lib" >> /etc/ld.so.conf.d/OpenCV.conf \
   && ldconfig
-

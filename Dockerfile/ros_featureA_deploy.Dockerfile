@@ -17,7 +17,7 @@ COPY --from=test /etc/ld.so.conf.d/mqtt.conf /etc/ld.so.conf.d/mqtt.conf
 COPY ./script ./
 # Install dependencies
 RUN apt-get update && apt-get install -y --no-install-recommends \
-  #vim \
+  vim \
   libgpiod-dev \
   libpcl-segmentation1.10 \
   && rm -rf /var/lib/apt/lists/*

@@ -27,7 +27,7 @@ camera_basler_node_l:
     serial_number_enable: false            #boolean
     camera_number: 1                      #const int 
     # camera_serial_number: "40146421"            #string
-    camera_serial_number: "40138314"            #string
+    camera_serial_number: "40146411"            #string
     # camera_2_serial_number: "40136629"            #string  
     hardware_trigger_source: "Line4"      #string(Line1,2,3,4)
     hardware_trigger_edge: "RisingEdge"      #string(RisingEdge,FallingEdge,AnyEdge,LevelHigh,LevelLow)
@@ -47,14 +47,14 @@ camera_basler_node_l:
     reverseX : 1                          #int
     reverseY : 1                          #int
 
-    save_path : "/home/ubuntu/http_server/imagel.bmp"  #string
+    save_path : "/ws/ros2_log/imagel.bmp"  #string (remap direction to host)
 
 camera_basler_node_r:
   ros__parameters:
     serial_number_enable: false            #boolean
     camera_number: 1                      #const int 
     # camera_1_serial_number: "40138314"            #string
-    camera_serial_number: "40136629"            #string  
+    camera_serial_number: "40146416"            #string  
     hardware_trigger_source: "Line4"      #string(Line1,2,3,4)
     hardware_trigger_edge: "RisingEdge"      #string(RisingEdge,FallingEdge,AnyEdge,LevelHigh,LevelLow)
 
@@ -73,4 +73,4 @@ camera_basler_node_r:
     reverseX : 0                          #int
     reverseY : 0                          #int
 
-    save_path : "/home/ubuntu/http_server/imager.bmp"  #string
+    save_path : "/ws/ros2_log/imager.bmp"  #string  (remap direction to host)
