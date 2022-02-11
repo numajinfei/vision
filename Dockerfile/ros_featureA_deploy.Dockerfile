@@ -1,4 +1,4 @@
-FROM jadehu/ros2_feature_a_test AS test
+FROM jadehu/ros2:feature_a_test AS test
 LABEL maintainer=numajinfei@163.com
 
 FROM ros:galactic

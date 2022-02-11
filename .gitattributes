@@ -1,0 +1,2 @@
+# ignore special files when merge
+README.md merge=ours

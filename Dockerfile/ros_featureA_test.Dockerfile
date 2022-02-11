@@ -1,4 +1,4 @@
-FROM jadehu/ros2_build AS build
+FROM jadehu/ros2:build AS build
 LABEL maintainer="numajinfei@163.com"
 
 COPY ./src ./ws/src
