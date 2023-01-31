@@ -45,7 +45,8 @@ RUN wget -O yaml-cpp.tar.gz https://github.com/jbeder/yaml-cpp/archive/refs/tags
 
 
 # COPY installer/phoxi.run /tmp/phoxi.run
-COPY system_files/PhoXiControl /usr/local/bin/PhoXiControl
+# COPY system_files/PhoXiControl /usr/local/bin/PhoXiControl
+COPY ./Dockerfile/PhoXiControl /usr/local/bin/PhoXiControl
 
 # copy 3d scanner source code and scripts to docker image.
 # COPY /architecture_measurement ./ws/src
