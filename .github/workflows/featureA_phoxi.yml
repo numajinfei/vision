@@ -25,7 +25,7 @@ jobs:
         uses: actions/checkout@v2
         with:
           #submodules: recursive
-          ref: featureA
+          ref: featureA_phoxi
           #fetch-depth: 2
 
       - name: Cache Docker layers
