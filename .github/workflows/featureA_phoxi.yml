@@ -6,9 +6,9 @@ name: featureA_phoxi test and deploy' actions
 on:
   # Triggers the workflow on push or pull request events but only for the master branch
   push:
-    branches: [ featureA ]
+    branches: [ featureA_phoxi ]
   pull_request:
-    branches: [ featureA ]
+    branches: [ featureA_phoxi ]
 
   # Allows you to run this workflow manually from the Actions tab
   #workflow_dispatch:
