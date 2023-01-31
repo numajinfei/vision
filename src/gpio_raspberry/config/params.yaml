@@ -1,7 +1,0 @@
-gpio_raspberry_node:
-  ros__parameters:
-    port: 26                    #int
-    basler_trigger_line: 17     #int
-    laser_trigger_line: 4       #int
-    basler_trigger_frquency: 60 #int
-    laser_trigger_frquency: 60  #int

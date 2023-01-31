@@ -1,0 +1,23 @@
+function_node:
+  ros__params:
+    required_nodes: 
+      - 'mqtt_ros_node'
+
+      - 'aux_box_client_node'
+
+      - 'phoxi_control_node'
+ 
+      - 'surface_flatness_node'
+      - 'perpendicularity_node'
+      - 'levelness_node'
+      - 'internal_and_external_angle_node'
+      - 'pillar_section_size_node'
+      - 'floor_height_node'
+    phoxi_control_node: 
+      - 'start'
+      - 'stop'
+      - 'grab_point_cloud'
+      - 'grab_image'
+    aux_box_client_node:
+      - 'grabLaserRanger'
+      - 'grabRollPitchYaw'

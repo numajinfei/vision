@@ -1,0 +1,8 @@
+%YAML:1.0
+---
+cloud_header_node:
+    params:
+        plane:            
+            distanceThreshold: 4.               #float
+
+       

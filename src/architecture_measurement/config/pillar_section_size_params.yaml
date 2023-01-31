@@ -1,0 +1,10 @@
+pillar_section_size_node:
+    ros__parameters:   
+        engineering:
+            - "Normal"
+            - "Concerte"
+        option: 
+            - "PillarSectionSize"
+        I_R_C: [0.0750241, 0.0155045, 0.997061, -0.997164, 0.0071819, 0.0749201, -0.0059992, -0.999854, 0.0159993]
+        fileName: '/home/ubuntu/work/files/data/pointcloud.txt'
+        extraParama: 7.2

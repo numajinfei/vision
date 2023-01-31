@@ -1,0 +1,17 @@
+[Unit]
+Description="ROS2 node: pipeline, version 2.0"
+PartOf=ros2_v2_manage.service
+After=ros2_v2_phoxi_control.service
+
+[Service]
+User=ubuntu
+Type=simple
+WorkingDirectory=/home/ubuntu/am_v2_ws
+ExecStart=/bin/bash -c "source /opt/ros/galactic/setup.bash; source install/local_setup.bash; ros2 launch pipeline pipeline.launch.py"
+KillSignal=SIGINT
+Restart=on-failure
+RestartSec=30
+
+[Install]
+WantedBy=ros2_v2_manage.service
+

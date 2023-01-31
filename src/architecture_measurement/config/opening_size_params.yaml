@@ -1,0 +1,9 @@
+opening_size_node:
+    ros__parameters:  
+        engineering:
+            - "Normal"    
+            - "Masonry"
+        option: 
+            - "WindowOpeningSize"
+            - "DoorOpeningSize"
+        fileName: '/home/ubuntu/work/files/data/pointcloud.txt'

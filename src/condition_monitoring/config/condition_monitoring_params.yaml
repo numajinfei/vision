@@ -1,0 +1,36 @@
+condition_monitoring_node:
+  ros__params:
+    # isTest: true
+    required_nodes: 
+      - 'phoxi_control_node'
+      # - 'inclinometer_node'
+      # - 'laser_ranger_node'
+      # - 'camera_node'
+
+      - 'floor_height_node'
+      - 'internal_and_external_angle_node'
+      - 'perpendicularity_node'
+      - 'levelness_node'
+      - 'pillar_section_size_node'
+      - 'surface_flatness_node'
+
+      - 'mqtt_ros_node'
+      - 'function_node' 
+      - 'aux_box_client_node'
+    phoxi_control_node: 
+      - 'start'
+      - 'stop'
+      - 'grab_point_cloud'
+      - 'grab_image'
+    aux_box_client_node:
+      - 'grabLaserRanger'
+      - 'grabRollPitchYaw'
+    # inclinometer_node:
+    #   - 'start'
+    #   - 'stop'
+    # laser_ranger_node:
+    #   - 'grab'
+    # camera_node:
+    #   - 'start'
+    #   - 'stop'
+    #   - 'grab'

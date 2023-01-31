@@ -1,0 +1,7 @@
+mqtt_ros_node:
+  ros__parameters:
+    server_address: 'tcp://127.0.0.1:1883'  #string
+    client_id: '1'                          #string
+    topic: 'iot/zhushi/scanner/'            #string
+    dest_topic: 'iot/zhushi/scanner/xxx'    #string
+    qos: 0                                  #enum: 0, 1, 2

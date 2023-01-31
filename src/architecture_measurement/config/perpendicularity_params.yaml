@@ -1,0 +1,14 @@
+perpendicularity_node:
+    ros__parameters:  
+        engineering:
+            - "Normal"    
+            - "Concerte"
+            - "Plaster"
+            - "Partition"
+            - "Veneer"
+        option: 
+            - "WallVertical"
+            - "PillarVerticality"
+        I_R_C: [-0.159174, -0.00532417, -0.987236, -0.986937, -0.0243564, 0.159257, -0.0248935, 0.999689, -0.00137771]
+        fileName: '/home/ubuntu/work/files/data/pointcloud.txt'
+        extraParam: 2.

@@ -1,0 +1,67 @@
+%YAML:1.0
+---
+phoxi_control_node:
+    ros__params:
+        capturingMode: 
+            resolution:                                 #[2064*1544,1032*722. default:2064*1544]
+                width: 2064                             #int
+                height: 1544                            #int
+        triggerMode: "Software"                         #str [Freerun, Software, Hardware, NoValue]
+        timeOut: "ZeroTimeout"                          #str [ZeroTimeout, Infinity, LastStored, Default. default: ZeroTimeout]
+        captruingSettings:
+            shutterMultiplier: 2                        #int [range:1--20,step:1,default:2]   
+            scanMultiplier: 1                           #int [range:1--20,step:1,default:3]
+            cameraOnlyMode: false                       #bool [true,false. default:false]
+            
+            ambientLightSuppression: true               #bool [true,false. default:true]
+            codingStrategy: "Normal"                    #str [Normal, Interreflections. default:Normal]
+            codingQuality: "Ultra"                      #str [Fast, High, Ultra. default:Ultra]
+            textureSource: "LED"                        #str [Computed, LED, Laser, Focus. default:LED]
+            singlePatternExposure: 100.352                #double [10.24, 14.366, 20.48, 24.576, 30.72, 34.816, 40.96, 49.152, 75.776, 79.872, 90.112, 100.352. default:40.96]
+            maximumFPS: 0.                              #double [range:0-2, unit:hz. default:0]
+            laserPower: 4095                            #int [range:1000--4095,step:1. default:4095]                     
+            projectionOffsetLeft: 0                     #int [range:0--512, step:1, default:0]
+            projectionOffsetRight: 0                    #int [range:0--512, step:1, default:0]
+            lEDPower: 4095                              #int [range:0--4095,step:1. default:4095]
+        processingSettings: 
+            confidence: 3.                              #double [range:0--5. default:3. unit:mm]
+            roi3d:
+                space: "CameraSpace"                    #str [CameraSpace, PointCloudSpace. default:CameraSpace]
+                min:
+                    x: 0.                               #double [default:0]
+                    y: 0.                               #double [default:0]
+                    z: 0.                               #double [default:0]
+                max:    
+                    x: 0.                               #double [default:0]
+                    y: 0.                               #double [default:0]
+                    z: 0.                               #double [default:0]
+            normalAngle:
+                maxCameraAngle: 90.                     #double [range:0--90. unit: degree]
+                maxProjectorAngle: 90.                  #double [range:0--90. unit: degree]
+                minHalfwayAngle: 0.                     #double [range:0--90. unit: degree]
+                maxHalfwayAngle: 90.                    #double [range:0--90. unit: degree]
+            surfaceSmothness: "Normal"                  #str [Sharp, Normal, Smooth. default:Normal]   
+            calibrationVolumeOnly: true                 #bool [true, false. default:true] 
+            normalsEstimationRadius: 2                  #int [range:0--4. default: 2]
+            interreflectionsFiltering: true             #bool [true, false. default: true]
+            interreflectionFilterStrength: 0.5          #double [default:0.5]                
+        coordinatesSettings: 
+            invertedMarkers: false                  #bool [true, false, default: false]
+            markerScale: 
+                x: 1.0                              #double [default: 1.0]
+                y: 1.0                              #double [default: 1.0]
+            coordinateSpace: "CameraSpace"              #str [CameraSpace, MarkerSpace, RobotSpace, CustomSpace. default:CameraSpace]
+            customTransformation:
+                rotation: [1.,0.,0.,0.,1.,0.,0.,0.,1.]  #squence
+                translation: [0.,0.,0.]                 #squence
+            robotTransformation:
+                rotation: [1.,0.,0.,0.,1.,0.,0.,0.,1.]  #squence
+                translation: [0.,0.,0.]                 #squence  
+            recognizeMarkers: false                     #bool [true, false, default: false]                
+    others:
+        connectionMethod: "HWIdentification"            #str [HWIdentification, ID, FirstAttached, FileCamera, default:HWIdentification ] 
+        HWIdentification: "LJE-071"                     #str [Hardware Identification]
+        fileCameraFolder: ""                            #str
+        outputFolder: "../result"                       #str
+        projectName: "perpendicularity_roll"                             #str            
+        saveFrame: false                                #bool

@@ -19,11 +19,28 @@ endif()
 find_package(ament_cmake REQUIRED)
 find_package(rosidl_default_generators REQUIRED)
 find_package(std_msgs REQUIRED)
+find_package(sensor_msgs REQUIRED)
 
-
-
-
-rosidl_generate_interfaces(${PROJECT_NAME} msg/LineCenter.msg msg/Float64Array.msg msg/RollPitchYaw.msg msg/ModbusCoord.msg srv/TriggerNew.srv DEPENDENCIES std_msgs)
+rosidl_generate_interfaces(
+  ${PROJECT_NAME} 
+    msg/AuxBox.msg
+    msg/Defect.msg
+    msg/EmbeddedParts.msg
+    msg/Float64Array.msg 
+    msg/LineCenter.msg 
+    msg/LaserRanger.msg 
+    msg/ModbusCoord.msg 
+    msg/PointCloudOp.msg
+    msg/RollPitchYaw.msg     
+    msg/PointCloudC.msg
+    msg/Inclinometer.msg
+    msg/MeasurementResult.msg
+    msg/ImageC.msg
+    srv/TriggerNew.srv 
+    srv/TriggerOp.srv
+  DEPENDENCIES 
+    std_msgs
+    sensor_msgs)
 
 if(BUILD_TESTING)
   find_package(ament_lint_auto REQUIRED)

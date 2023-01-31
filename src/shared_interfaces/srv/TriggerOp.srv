@@ -1,0 +1,8 @@
+int64 id
+string engineering
+string option
+float32 angle
+int32 frame_id
+---
+bool success   # indicate successful run of triggered service
+string message # informational, e.g. for error messages

@@ -1,0 +1,17 @@
+[Unit]
+Description="phoxi control"
+PartOf=ros2_v2_manage.service
+After=ros2_v2_manage.service
+
+[Service]
+User=ubuntu
+Type=simple
+WorkingDirectory=/opt/Photoneo/PhoXiControl-1.7.2/bin/support
+ExecStart=/bin/bash -c "echo "zhushi-tech" | sudo -S ./RunPhoXiControlOnBackground.sh"
+KillSignal=SIGINT
+Restart=on-failure
+RestartSec=30
+
+[Install]
+WantedBy=ros2_v2_manage.service
+

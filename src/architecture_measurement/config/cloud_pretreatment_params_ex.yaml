@@ -1,0 +1,63 @@
+%YAML:1.0
+---
+cloud_pretreatment_node:
+    normal:
+        statisticalFilter:
+            statisticalFilter_meanK: 8.                             #float
+            statisticalFilter_stddevMulThresh: 3.                   #float
+
+        radiusFilter:
+            radiusFilter_radius: 5.                                 #float
+            radiusFilter_minNeighborsInRadius: 4                    #int
+
+        voxelGridFilter:
+            voxelGridFilter_leafSize_x: 4.                          #float
+            voxelGridFilter_leafSize_y: 4.                          #float
+            voxelGridFilter_leafSize_z: 5.                          #float
+
+        shadowPointsFilter:
+            shadowPointsFilter_threshold: 0.1                       #float
+
+        normalEstimation:
+            normalEstimation_numberOfThreads: 8                     #int
+            normalEstimation_kSearch: 25                            #int
+
+        plane:
+            plane_distanceThreshold: 4.                             #float
+
+        parallelLine:
+            parallelLine_epsAngle: 0.174                            #float unit radian
+            parallelLine_distanceThreshold: 5.                      #float
+
+        line:
+            line_distanceThreshold: 5.                              #float
+
+        boundary:
+            boundary_radius: 8.                                     #float
+            boundary_angleThreshold: 2.                             #float
+
+        planeSegmentation:
+            planeSegmentation_minClusterSize: 1000                  #int
+            planeSegmentation_maxClusterSize:  1000000              #int
+            planeSegmentation_numberOfNeighbours: 25                #int
+            planeSegmentation_smoothnessThreshold: 0.0872           #float unit radian 
+            planeSegmentation_curvatureThreshold: 1.                #float
+
+        concaveHull:
+            concaveHull_alpha: 3.
+
+    masonry_wall:
+        normalEstimation:
+            normalEstimation_numberOfThreads: 8                     #int
+            normalEstimation_kSearch: 25                            #int
+
+        planeSegmentation:
+            planeSegmentation_minClusterSize: 1000                  #int
+            planeSegmentation_maxClusterSize:  3000000              #int
+            planeSegmentation_numberOfNeighbours: 25                #int
+            planeSegmentation_smoothnessThreshold: 0.7854           #float unit radian 
+            planeSegmentation_curvatureThreshold: 50.                #float
+
+    
+
+        

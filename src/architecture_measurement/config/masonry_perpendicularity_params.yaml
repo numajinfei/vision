@@ -1,0 +1,8 @@
+masonry_perpendicularity_node:
+    ros__parameters:
+        engineering:
+            - "Masonry"
+        option:
+            - "WallVertical"
+        I_R_C: [0.0, 0.0, 1.0, -1.0, 0.0, 0.0, 0.0, -1.0, 0.0]    
+        fileName: '/home/ubuntu/work/files/data/pointcloud.txt'

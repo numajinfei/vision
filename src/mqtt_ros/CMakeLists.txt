@@ -15,21 +15,46 @@ if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
   add_compile_options(-Wall -Wextra -Wpedantic)
 endif()
 
+add_compile_options(-fPIC)
+
+if (UNIX AND NOT APPLE)
+    # add_compile_options(-std=c++1y)
+    add_compile_options(-pthread)
+endif(UNIX AND NOT APPLE)
+
+# find_package(OpenCV REQUIRED)
+# find_package(PCL 1.3 REQUIRED)
+# find_package(PCL 1.3 REQUIRED COMPONENTS common)
+# find_package(yaml-cpp REQUIRED)  
+# find_package(Eigen3 3.3.7 REQUIRED NO_MODULE)
+
+#link pcl
+# include_directories(${PCL_INCLUDE_DIRS})
+# link_directories(${PCL_LIBRARY_DIRS})
+# add_definitions(${PCL_DEFINITIONS})
+
 # find dependencies
 find_package(ament_cmake REQUIRED)
 find_package(rclcpp REQUIRED)
 find_package(rclcpp_components REQUIRED)
+find_package(std_msgs REQUIRED)
+find_package(nlohmann_json 3.2.0 REQUIRED)
 find_package(PahoMqttCpp REQUIRED)
 
 add_library(mqtt_ros SHARED src/mqtt_ros.cpp)
-
-target_include_directories(mqtt_ros PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include> $<INSTALL_INTERFACE:include>)
-
-ament_target_dependencies(mqtt_ros rclcpp rclcpp_components)
-
+target_include_directories(mqtt_ros 
+  PUBLIC 
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include> 
+    $<INSTALL_INTERFACE:include>)
+ament_target_dependencies(mqtt_ros 
+  rclcpp 
+  rclcpp_components
+  std_msgs
+  nlohmann_json)
 target_link_libraries(mqtt_ros PahoMqttCpp::paho-mqttpp3)
-
-rclcpp_components_register_node(mqtt_ros PLUGIN "mqtt_ros::MqttRos" EXECUTABLE mqtt_ros_node)
+rclcpp_components_register_node(mqtt_ros
+  PLUGIN "mqtt_ros::MqttRos" 
+  EXECUTABLE mqtt_ros_node)
 
 if(BUILD_TESTING)
   find_package(ament_lint_auto REQUIRED)

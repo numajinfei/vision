@@ -33,3 +33,9 @@
 
 # Temp file
 xxx.*
+
+# Floder & doc
+build
+install
+devel
+log

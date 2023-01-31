@@ -1,0 +1,14 @@
+internal_and_external_angle_node:
+    ros__parameters: 
+        engineering:
+            - "Normal"
+            - "Plaster"
+            - "Partition"
+            - "Veneer"
+        option:
+            - "ExternalCorner"
+            - "InsideCorner"
+        
+        I_R_C: [0.0750241, 0.0155045, 0.997061, -0.997164, 0.0071819, 0.0749201, -0.0059992, -0.999854, 0.0159993]
+        distanceThread: 150.    
+        fileName: '/home/ubuntu/work/files/data/pointcloud.txt'

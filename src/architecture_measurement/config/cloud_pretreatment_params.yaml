@@ -1,0 +1,45 @@
+%YAML:1.0
+---
+cloud_pretreatment_node:
+    params:
+      statisticalFilter:
+        statisticalFilter_meanK: 8.     
+        statisticalFilter_stddevMulThresh: 3.
+
+      radiusFilter:
+        radiusFilter_radius: 5.
+        radiusFilter_minNeighborsInRadius: 4 #int
+
+      voxelGridFilter:
+        voxelGridFilter_leafSize_x: 4.
+        voxelGridFilter_leafSize_y: 4.
+        voxelGridFilter_leafSize_z: 5.
+
+      shadowPointsFilter:
+        shadowPointsFilter_threshold: 0.1
+
+      normalEstimation:
+        normalEstimation_numberOfThreads: 8 #int
+        normalEstimation_kSearch: 25 #int
+
+      plane:
+        plane_distanceThreshold: 4.
+
+      parallelLine:
+        parallelLine_epsAngle: 0.174 #float unit radian
+        parallelLine_distanceThreshold: 5.
+
+      boundary:
+        boundary_radius: 8.
+        boundary_angleThreshold: 2.
+
+      planeSegmentation:
+        planeSegmentation_minClusterSize: 1000 #int
+        planeSegmentation_maxClusterSize: 1000000 #int
+        planeSegmentation_numberOfNeighbours: 25 #int
+        planeSegmentation_smoothnessThreshold: 0.0872 #float unit radian 
+        planeSegmentation_curvatureThreshold: 1.0
+
+      concaveHull:
+        concaveHull_alpha: 3.
+

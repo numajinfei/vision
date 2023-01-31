@@ -12,7 +12,7 @@ def generate_launch_description():
     configFile = os.path.join(
         get_package_share_directory('mqtt_ros'),
         'config',
-        'params.yaml')
+        'mqtt_ros_params.yaml')
 
     with open(configFile, 'r') as file:
         configParams = yaml.safe_load(file)['mqtt_ros_node']['ros__parameters']
@@ -20,7 +20,9 @@ def generate_launch_description():
     node = ComposableNode(
         package = 'mqtt_ros',
         plugin = 'mqtt_ros::MqttRos',
-        parameters = [configParams])
+        name = 'mqtt_ros_node',        
+        parameters = [configParams],
+        extra_arguments=[{'use_intra_process_comms': True}])
 
     container = ComposableNodeContainer(
         name = 'mqtt_ros_container',
