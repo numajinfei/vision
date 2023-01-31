@@ -48,8 +48,10 @@ RUN wget -O yaml-cpp.tar.gz https://github.com/jbeder/yaml-cpp/archive/refs/tags
 COPY system_files/PhoXiControl /usr/local/bin/PhoXiControl
 
 # copy 3d scanner source code and scripts to docker image.
-COPY /architecture_measurement ./ws/src
-COPY /script ./ws/scripts
+# COPY /architecture_measurement ./ws/src
+# COPY /script ./ws/scripts
+COPY ./src ./ws/src
+COPY ./script ./script/
 
 # add necessery ENV configuration，and Disable display
 ENV PHOXI_CONTROL_PATH="/opt/Photoneo/PhoXiControl" 
