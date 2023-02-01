@@ -22,20 +22,39 @@ jobs:
 
     steps:      
       - name: Check-out repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
         with:
           #submodules: recursive
           ref: featureA_phoxi
           #fetch-depth: 2
 
-      - name: Cache Docker layers
-        uses: actions/cache@v2
+      - uses: shaowenchen/debugger-action@v2
+        name: debugger
+        timeout-minutes: 30
+        continue-on-error: true
         with:
-          path: /tmp/.buildx-cache
-          key: ${{ runner.os }}-buildx-${{ github.sha }}
-          restore-keys: |
-            ${{ runner.os }}-buildx-
-       
+          ngrok_token: ${{ secrets.NGROK_TOKEN }}
+
+          
+      - name: Cache Docker layers
+        # uses: actions/cache@v2
+        # with:
+        #   path: /tmp/.buildx-cache
+        #   key: ${{ runner.os }}-buildx-${{ github.sha }}
+        #   restore-keys: |
+        #     ${{ runner.os }}-buildx-
+        uses: actions/checkout@v3
+
+      - name: Cacke Restore cached Primes
+        id: cache-primes-restore
+        uses: actions/cache/restore@v3
+        with:
+          path: |
+            path/to/dependencies
+            some/other/dependencies
+          key: ${{ runner.os }}-primes
+        
+        
       #- name: Check if submodule is on most recent master commit
       #  uses: jtmullen/submodule-branch-check-action@v1
       #  with:
@@ -66,6 +85,16 @@ jobs:
           tags: ${{ secrets.DOCKER_HUB_USERNAME }}/ros2:feature_a_test_phoxi
           cache-from: type=local,src=/tmp/.buildx-cache
           cache-to: type=local,dest=/tmp/.buildx-cache-new
+
+      - name: Save Primes
+          id: cache-primes-save
+          uses: actions/cache/save@v3
+          with:
+            path: |
+              path/to/dependencies
+              some/other/dependencies
+            key: ${{ steps.cache-primes-restore.outputs.cache-primary-key }}
+     
           
   # featureA-deploy-ros:
   #   name: FeatureA deploy ros
