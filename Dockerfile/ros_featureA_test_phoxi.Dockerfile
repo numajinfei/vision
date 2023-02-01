@@ -33,9 +33,9 @@ RUN wget -O yaml-cpp.tar.gz https://github.com/jbeder/yaml-cpp/archive/refs/tags
 # download phoxi.run (other repo)  
   && wget -O /tmp/phoxi.run http://121.4.181.196:9000/build/phoxi.run \
   && chmod +x /tmp/phoxi.run \
-# mkdir ./font floder
-  && pwd && echo "mkdir ./font floder" \
-  && mkdir ./fonts && chmod +x ./fonts -R
+# # mkdir ./font floder
+#   && pwd && echo "mkdir ./font floder" \
+#   && mkdir ./fonts && chmod +x ./fonts -R
 
 # download phoxi.run(from repo) to /tmp/phoxi.run
 # RUN wget -O /tmp/phoxi.run http://121.4.181.196:9000/build/phoxi.run \
@@ -62,6 +62,7 @@ ENV PHOXI_CONTROL_PATH="/opt/Photoneo/PhoXiControl" DOCKER=1 QT_X11_NO_MITSHM=1 
 
 
 RUN set -eux \
+    && mkdir /fonts && chmod a+x /fonts \
     && cd /tmp \
     && chmod a+x phoxi.run \
     && chmod a+x /usr/local/bin/PhoXiControl \
