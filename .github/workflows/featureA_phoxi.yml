@@ -61,7 +61,7 @@ jobs:
         with:
           context: .
           file: ./Dockerfile/ros_featureA_test_phoxi.Dockerfile
-          platforms: linux/amd64,linux/arm64
+          platforms: linux/amd64
           push: true
           tags: ${{ secrets.DOCKER_HUB_USERNAME }}/ros2:feature_a_test_phoxi
           cache-from: type=local,src=/tmp/.buildx-cache
