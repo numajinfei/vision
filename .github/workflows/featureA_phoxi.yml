@@ -81,13 +81,13 @@ jobs:
           cache-from: type=local,src=/tmp/.buildx-cache
           cache-to: type=local,dest=/tmp/.buildx-cache-new
 
-      - uses: shaowenchen/debugger-action@v2
-        name: debugger
-        timeout-minutes: 30
-        continue-on-error: true
-        with:
-          ngrok_token: ${{ secrets.NGROK_TOKEN }}
-        needs: [Build and push]
+      # - uses: shaowenchen/debugger-action@v2
+      #   name: debugger
+      #   timeout-minutes: 30
+      #   continue-on-error: true
+      #   with:
+      #     ngrok_token: ${{ secrets.NGROK_TOKEN }}
+      #   needs: [Build and push]
 
       - name: Save Primes
         id: cache-primes-save
