@@ -7,8 +7,8 @@ USER root
 
 RUN set -eux \
     # change apt sources file
-    && sed -i "s/security.ubuntu.com/mirrors.ustc.edu.cn/g" /etc/apt/sources.list \
-    && sed -i "s/archive.ubuntu.com/mirrors.ustc.edu.cn/g" /etc/apt/sources.list \
+    # && sed -i "s/security.ubuntu.com/mirrors.ustc.edu.cn/g" /etc/apt/sources.list \
+    # && sed -i "s/archive.ubuntu.com/mirrors.ustc.edu.cn/g" /etc/apt/sources.list \
     && apt-get update -y \
     && apt-get install -y -q software-properties-common && apt-add-repository universe \
     && apt-get update -y \
@@ -32,7 +32,10 @@ RUN wget -O yaml-cpp.tar.gz https://github.com/jbeder/yaml-cpp/archive/refs/tags
   && rm -r yaml-cpp-yaml-cpp-0.7.0/ build \
 # download phoxi.run (other repo)  
   && wget -O /tmp/phoxi.run http://121.4.181.196:9000/build/phoxi.run \
-  && chmod +x /tmp/phoxi.run
+  && chmod +x /tmp/phoxi.run \
+# mkdir ./font floder
+  && pwd && echo "mkdir ./font floder" \
+  mkdir ./fonts && chmod +x ./fonts -R
 
 # download phoxi.run(from repo) to /tmp/phoxi.run
 # RUN wget -O /tmp/phoxi.run http://121.4.181.196:9000/build/phoxi.run \
@@ -55,8 +58,7 @@ COPY ./src ./ws/src
 COPY ./script ./script/
 
 # add necessery ENV configuration，and Disable display
-ENV PHOXI_CONTROL_PATH="/opt/Photoneo/PhoXiControl" 
-ENV DOCKER=1 QT_X11_NO_MITSHM=1 PHOXI_WITHOUT_DISPLAY=1
+ENV PHOXI_CONTROL_PATH="/opt/Photoneo/PhoXiControl" DOCKER=1 QT_X11_NO_MITSHM=1 PHOXI_WITHOUT_DISPLAY=1
 
 
 RUN set -eux \
