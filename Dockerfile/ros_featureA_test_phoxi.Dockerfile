@@ -32,7 +32,7 @@ RUN wget -O yaml-cpp.tar.gz https://github.com/jbeder/yaml-cpp/archive/refs/tags
   && rm -r yaml-cpp-yaml-cpp-0.7.0/ build \
 # download phoxi.run (other repo)  
   # && wget -O /tmp/phoxi.run http://121.4.181.196:9000/build/phoxi.run \
-  && wget -O https://github.com/numajinfei/vision/releases/download/v0.0.1-3rdparty/phoxi.run
+  && wget -O https://github.com/numajinfei/vision/releases/download/v0.0.1-3rdparty/phoxi.run \
   && chmod +x /tmp/phoxi.run \
 # # mkdir ./font floder
 #   && pwd && echo "mkdir ./font floder" \
