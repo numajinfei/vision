@@ -33,7 +33,7 @@
 
 # Temp file
 xxx.*
-*.bak
+*.bak*
 
 # Floder & doc
 build
