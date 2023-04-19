@@ -6,14 +6,15 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
   wget \
   && rm -rf /var/lib/apt/lists/*
 
-# Build opencv
-RUN wget -O opencv.tar.gz https://github.com/opencv/opencv/archive/refs/tags/4.5.2.tar.gz \
+# Build opencv 
+# RUN wget -O opencv.tar.gz https://github.com/opencv/opencv/archive/refs/tags/4.5.2.tar.gz \
+RUN wget -O opencv.tar.gz https://github.com/numajinfei/vision/releases/download/v0.0.1-3rdparty/opencv-4.5.2.tar.gz \
   && tar -xzf opencv.tar.gz \
   && rm opencv.tar.gz \
   && cmake \
     -D CMAKE_BUILD_TYPE:STRING=Release \
     -D CMAKE_INSTALL_PREFIX:STRING=/opt/opencv \
-    -D BUILD_LIST:STRING=core,imgproc,calib3d,,imgcodecs \
+    -D BUILD_LIST:STRING=core,imgproc,calib3d,,imgcodecs,highgui\
     -D BUILD_TESTS:BOOL=OFF \
     -D BUILD_PERF_TESTS:BOOL=OFF \
     -D BUILD_EXAMPLES:BOOL=OFF \

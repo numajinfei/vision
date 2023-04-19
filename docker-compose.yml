@@ -1,6 +1,14 @@
 version: "3.7"
 
-services:                        
+services:     
+    ros_build:
+       build:
+           context: .
+           dockerfile: ./Dockerfile/ros_build.Dockerfile     
+    #    depends_on: 
+    #        - ros_opencv         
+       container_name: ros_build
+
     # ros2_deploy:
     #         build:
     #             context: .

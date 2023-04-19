@@ -1,0 +1,309 @@
+# This is a basic workflow to help you get started with Actions
+
+name: Base
+
+# Controls when the workflow will run
+on:
+  # Triggers the workflow on push or pull request events but only for the master branch
+  push:
+    branches: [ base ]
+  pull_request:
+    branches: [ base ]
+
+  # Allows you to run this workflow manually from the Actions tab
+  #workflow_dispatch:
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+  # This workflow contains a single job called "build"
+  # build-ros-opencv:
+  #   name: Build ros opencv
+  #   runs-on: ubuntu-20.04
+
+  #   steps:
+  #     # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+  #     - name: Check-out repository
+  #       uses: actions/checkout@v2
+  #       with:
+  #       # "2" -> To retrieve the preceding commit
+  #         fetch-depth: 2
+
+  #     #- name: Cache Docker layers
+  #     #  uses: actions/cache@v2
+  #     #  with:
+  #     #    path: /tmp/.buildx-cache
+  #     #    key: ${{ runner.os }}-buildx-${{ github.sha }}
+  #     #    restore-keys: |
+  #     #      ${{ runner.os }}-buildx-
+
+  #     - name: Get changed files
+  #       id: changed-files
+  #       uses: tj-actions/changed-files@v2.0.0
+  #       with:
+  #         files: Dockerfile/ros_opencv.Dockerfile
+
+  #     - name: Set up QEMU
+  #       uses: docker/setup-qemu-action@v1
+        
+  #     - name: Set up Docker Buildx
+  #       id: buildx
+  #       uses: docker/setup-buildx-action@v1
+
+  #     - name: Login to DockerHub
+  #       uses: docker/login-action@v1
+  #       with:
+  #         username: ${{ secrets.DOCKER_HUB_USERNAME }}
+  #         password: ${{ secrets.DOCKER_HUB_ACCESS_TOKEN }}
+
+  #     - name: Build and push
+  #       if: steps.changed-files.outputs.any_changed == 'true'
+  #       uses: docker/build-push-action@v2
+  #       with:
+  #         context: .
+  #         file: ./Dockerfile/ros_opencv.Dockerfile
+  #         platforms: linux/amd64,linux/arm64
+  #         push: true
+  #         tags: ${{ secrets.DOCKER_HUB_USERNAME }}/ros2:opencv
+  #         #cache-from: type=local,src=/tmp/.buildx-cache
+  #         #cache-to: type=local,dest=/tmp/.buildx-cache
+          
+  # build-ros-pcl:
+  #   name: Build ros pcl
+  #   runs-on: ubuntu-20.04
+    
+  #   steps:
+  #     - name: Check-out repository
+  #       uses: actions/checkout@v2
+  #       with:
+  #         fetch-depth: 2
+      
+  #     #- name: Cache Docker layers
+  #     #  uses: actions/cache@v2
+  #     #  with:
+  #     #    path: /tmp/.buildx-cache
+  #     #    key: ${{ runner.os }}-buildx-${{ github.sha }}
+  #     #    restore-keys: |
+  #     #      ${{ runner.os }}-buildx-
+
+  #     - name: Get specific changed files
+  #       id: changed-files-specific
+  #       uses: tj-actions/changed-files@v2.0.0
+  #       with:
+  #         files: Dockerfile/ros_pcl.Dockerfile
+
+  #     - name: Set up QEMU
+  #       uses: docker/setup-qemu-action@v1
+        
+  #     - name: Set up Docker Buildx
+  #       id: buildx
+  #       uses: docker/setup-buildx-action@v1
+
+  #     - name: Login to DockerHub
+  #       uses: docker/login-action@v1
+  #       with:
+  #         username: ${{ secrets.DOCKER_HUB_USERNAME }}
+  #         password: ${{ secrets.DOCKER_HUB_ACCESS_TOKEN }}
+
+  #     - name: Build and push
+  #       if: steps.changed-files-specific.outputs.any_changed == 'true'          
+  #       uses: docker/build-push-action@v2
+  #       with:
+  #         context: .
+  #         file: ./Dockerfile/ros_pcl.Dockerfile
+  #         platforms: linux/amd64,linux/arm64
+  #         push: true
+  #         tags: ${{ secrets.DOCKER_HUB_USERNAME }}/ros2:pcl
+  #         #cache-from: type=local,src=/tmp/.buildx-cache
+  #         #cache-to: type=local,dest=/tmp/.buildx-cache
+          
+  # build-ros-basler:
+  #   name: Build ros basler
+  #   runs-on: ubuntu-20.04
+    
+  #   steps:
+  #     - name: Check-out repository
+  #       uses: actions/checkout@v2
+  #       with:
+  #         fetch-depth: 2
+      
+  #     #- name: Cache Docker layers
+  #     #  uses: actions/cache@v2
+  #     #  with:
+  #     #    path: /tmp/.buildx-cache
+  #     #    key: ${{ runner.os }}-buildx-${{ github.sha }}
+  #     #    restore-keys: |
+  #     #      ${{ runner.os }}-buildx-
+
+  #     - name: Get specific changed files
+  #       id: changed-files-specific
+  #       uses: tj-actions/changed-files@v2.0.0
+  #       with:
+  #         files: |
+  #           Dockerfile/ros_basler.Dockerfile
+
+  #     - name: Set up QEMU
+  #       uses: docker/setup-qemu-action@v1
+        
+  #     - name: Set up Docker Buildx
+  #       id: buildx
+  #       uses: docker/setup-buildx-action@v1
+
+  #     - name: Login to DockerHub
+  #       uses: docker/login-action@v1
+  #       with:
+  #         username: ${{ secrets.DOCKER_HUB_USERNAME }}
+  #         password: ${{ secrets.DOCKER_HUB_ACCESS_TOKEN }}
+
+  #     - name: Build and push
+  #       if: steps.changed-files-specific.outputs.any_changed == 'true'               
+  #       uses: docker/build-push-action@v2
+  #       with:
+  #         context: .
+  #         file: ./Dockerfile/ros_basler.Dockerfile
+  #         platforms: linux/amd64,linux/arm64
+  #         push: true
+  #         tags: ${{ secrets.DOCKER_HUB_USERNAME }}/ros2:basler
+  #         #cache-from: type=local,src=/tmp/.buildx-cache
+  #         #cache-to: type=local,dest=/tmp/.buildx-cache
+          
+  # build-ros-galaxy:
+  #   name: Build ros galaxy
+  #   runs-on: ubuntu-20.04
+    
+  #   steps:
+  #     - name: Check-out repository
+  #       uses: actions/checkout@v2
+  #       with:
+  #         fetch-depth: 2
+          
+  #     #- name: Cache Docker layers
+  #     #  uses: actions/cache@v2
+  #     #  with:
+  #     #    path: /tmp/.buildx-cache
+  #     #    key: ${{ runner.os }}-buildx-${{ github.sha }}
+  #     #    restore-keys: |
+  #     #      ${{ runner.os }}-buildx-
+
+  #     - name: Get specific changed files
+  #       id: changed-files-specific
+  #       uses: tj-actions/changed-files@v2.0.0
+  #       with:
+  #         files: Dockerfile/ros_galaxy.Dockerfile
+
+  #     - name: Set up QEMU
+  #       uses: docker/setup-qemu-action@v1
+        
+  #     - name: Set up Docker Buildx
+  #       id: buildx
+  #       uses: docker/setup-buildx-action@v1
+
+  #     - name: Login to DockerHub
+  #       uses: docker/login-action@v1
+  #       with:
+  #         username: ${{ secrets.DOCKER_HUB_USERNAME }}
+  #         password: ${{ secrets.DOCKER_HUB_ACCESS_TOKEN }}
+
+  #     - name: Build and push
+  #       if: steps.changed-files-specific.outputs.any_changed == 'true'
+  #       uses: docker/build-push-action@v2
+  #       with:
+  #         context: .
+  #         file: ./Dockerfile/ros_galaxy.Dockerfile
+  #         platforms: linux/amd64,linux/arm64
+  #         push: true
+  #         tags: ${{ secrets.DOCKER_HUB_USERNAME }}/ros2:galaxy 
+  #         #cache-from: type=local,src=/tmp/.buildx-cache
+  #         #cache-to: type=local,dest=/tmp/.buildx-cache         
+
+          
+  build-ros-build:
+    name: Build ros build
+    runs-on: ubuntu-20.04
+    # needs: [build-ros-basler, build-ros-galaxy, build-ros-opencv]
+    needs: [build-ros-basler, build-ros-galaxy]
+
+    steps:
+      - name: Check-out repository
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 2
+
+      - name: Cache Docker layers
+        uses: actions/cache@v2
+        with:
+          path: /tmp/.buildx-cache
+          key: ${{ runner.os }}-buildx-${{ github.sha }}
+          restore-keys: |
+            ${{ runner.os }}-buildx-
+          
+      - name: Get specific changed files
+        id: changed-files-specific
+        uses: tj-actions/changed-files@v2.0.0
+        with:
+          files: Dockerfile/ros_build.Dockerfile
+
+
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v1
+        
+      - name: Set up Docker Buildx
+        id: buildx
+        uses: docker/setup-buildx-action@v1
+
+      - name: Login to DockerHub
+        uses: docker/login-action@v1
+        with:
+          username: ${{ secrets.DOCKER_HUB_USERNAME }}
+          password: ${{ secrets.DOCKER_HUB_ACCESS_TOKEN }}
+
+      - name: Build and push        
+        if: steps.changed-files-specific.outputs.any_changed == 'true'        
+        uses: docker/build-push-action@v2        
+        with:
+          context: .
+          file: ./Dockerfile/ros_build.Dockerfile
+          platforms: linux/amd64,linux/arm64
+          push: true
+          tags: ${{ secrets.DOCKER_HUB_USERNAME }}/ros2:build 
+          cache-from: type=local,src=/tmp/.buildx-cache
+          cache-to: type=local,dest=/tmp/.buildx-cache-new    
+          
+          
+  # ros1-bridge:
+  #   name: Build ros1 bridge
+  #   runs-on: ubuntu-20.04
+
+  #   steps:      
+  #     - name: Check-out repository
+  #       uses: actions/checkout@v2
+  #       with:        
+  #         fetch-depth: 2      
+
+  #     - name: Get changed files
+  #       id: changed-files-specific
+  #       uses: tj-actions/changed-files@v2.0.0
+  #       with:
+  #         files: Dockerfile/ros_ros1_bridge.Dockerfile
+
+  #     - name: Set up QEMU
+  #       uses: docker/setup-qemu-action@v1
+        
+  #     - name: Set up Docker Buildx
+  #       id: buildx
+  #       uses: docker/setup-buildx-action@v1
+
+  #     - name: Login to DockerHub
+  #       uses: docker/login-action@v1
+  #       with:
+  #         username: ${{ secrets.DOCKER_HUB_USERNAME }}
+  #         password: ${{ secrets.DOCKER_HUB_ACCESS_TOKEN }}
+
+  #     - name: Build and push        
+  #       if: steps.changed-files-specific.outputs.any_changed == 'true'        
+  #       uses: docker/build-push-action@v2        
+  #       with:
+  #         context: .
+  #         file: ./Dockerfile/ros_ros1_bridge.Dockerfile
+  #         platforms: linux/amd64,linux/arm64
+  #         push: true
+  #         tags: ${{ secrets.DOCKER_HUB_USERNAME }}/ros2:ros1_bridge
