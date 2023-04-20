@@ -242,13 +242,6 @@ jobs:
         with:
           files: Dockerfile/ros_build.Dockerfile
 
-      - name: Download release files
-        uses: robinraju/release-downloader@v1.7
-        with:
-          repository: "owner/repo"
-          tag: "v0.0.1-3rdparty"
-          fileName: "'json.hpp', 'paho.mqtt.*.tar.gz', 'phoxi.run', 'PhoXiControl', '*.whl', 'libredwg-0.12.4.tar.gz'"
-
       - name: Show download release files
         run: |
           echo "[show]--> Current path is: $pwd, ls: $ls"
@@ -268,6 +261,13 @@ jobs:
         with:
           username: ${{ secrets.DOCKER_HUB_USERNAME }}
           password: ${{ secrets.DOCKER_HUB_ACCESS_TOKEN }}
+
+      - name: Download release files
+        uses: robinraju/release-downloader@v1.7
+        with:
+          repository: "owner/repo"
+          tag: "v0.0.1-3rdparty"
+          fileName: "'json.hpp', 'paho.mqtt.*.tar.gz', 'phoxi.run', 'PhoXiControl', '*.whl', 'libredwg-0.12.4.tar.gz'"
 
       - name: Build and push        
         if: steps.changed-files-specific.outputs.any_changed == 'true'        
