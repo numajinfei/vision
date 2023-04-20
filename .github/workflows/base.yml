@@ -261,6 +261,7 @@ jobs:
         with:
           # repository: "vision"
           tag: "v0.0.1-3rdparty"
+          out-file-path: "downloads"
           fileName: "'json.hpp', 'paho.mqtt.*.tar.gz', 'phoxi.run', 'PhoXiControl', '*.whl', 'libredwg-0.12.4.tar.gz'"
 
       - name: Show download release files
@@ -270,6 +271,7 @@ jobs:
           echo "[show]--> OS information2: $(uname -a)"
           echo "[show]--> OS user: $USER"
           echo "[show]--> GITHUB_WORKSPACE: $GITHUB_WORKSPACE"
+          echo -e "[show]--> Release files's path:`ls downloads`\n`ls $$GITHUB_WORKSPACE/downloads`"
 
 
       - name: Build and push        
@@ -278,7 +280,7 @@ jobs:
         with:
           context: .
           file: ./Dockerfile/ros_build.Dockerfile
-          platforms: linux/amd64,linux/arm64
+          platforms: linux/amd64
           push: true
           tags: ${{ secrets.DOCKER_HUB_USERNAME }}/ros2:build 
           cache-from: type=local,src=/tmp/.buildx-cache
