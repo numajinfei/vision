@@ -242,6 +242,24 @@ jobs:
         with:
           files: Dockerfile/ros_build.Dockerfile
 
+      - name: Download release files
+        uses: robinraju/release-downloader@v1.7
+        with:
+          repository: "owner/repo"
+          tag: "v0.0.1-3rdparty"
+          fileName: "json.hpp"
+          fileName: "paho.mqtt.*.tar.gz"
+          fileName: "phoxi.run"
+          fileName: "PhoXiControl"
+          fileName: "torch-1.13.0+cpu-cp38-cp38-linux_x86_64.whl"
+          fuleName: "libredwg-0.12.4.tar.gz"
+
+      - name: Show download release files
+        run: |
+          echo "[show]--> Current path is: $pwd"
+          echo "[show]--> OS information1: $(lsb_release -a)"
+          echo "[show]--> OS information2: $(uname -a)"
+          echo "[show]--> OS user: $(who)"
 
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v1

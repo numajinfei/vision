@@ -48,7 +48,10 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 
 # rm 
   && rm -rf /var/lib/apt/lists/* \
-
+  && echo "[show2]--> Current path is: $pwd" \
+  && echo "[show2]--> OS information1: $(lsb_release -a)" \
+  && echo "[show2]--> OS information2: $(uname -a)" \
+  && echo "[show2]--> OS user: $(who)"
 
 
 # Install AI Reference Packages
