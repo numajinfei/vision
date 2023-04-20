@@ -6,6 +6,7 @@ LABEL maintainer="numajinfei@163.com"
 
 FROM ros:galactic
 
+
 # Install dependencies
 RUN apt-get update && apt-get install -y --no-install-recommends \
   wget \
@@ -46,12 +47,21 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
   python3-pip \
   && pip3 install opencv-python \
 
+# Phoxicontrol dependencies (gui...)
+  && apt-get install -y -q software-properties-common && apt-add-repository universe \
+  && apt-get update -y \
+  #---ubuntu18.04:
+  # && apt install -y avahi-utils libqt5core5a libqt5dbus5 libqt5gui5 libgtk2.0-0 libssl1.0.0 libgomp1 libpcre16-3 libflann-dev libssh2-1-dev libpng16-16 libglfw3-dev xcb
+  #---ubuntu20.04:
+  && apt install -y avahi-utils libqt5core5a libqt5dbus5 libqt5gui5 libgtk2.0-0 libssl1.1 libgomp1 libpcre16-3 libflann-dev libssh2-1-dev libpng16-16 libglfw3-dev xcb libxcb-xinerama0 libpcre2-16-0 \
+
+
 # rm 
   && rm -rf /var/lib/apt/lists/* \
-  && echo -e "[show2]--> Current path is: $PWD, \n ls:\n`ls` \nrelease file path:`ls ./downloads`" \
-  && echo "[show2]--> OS information1: $(lsb_release -a)" \
-  && echo "[show2]--> OS information2: $(uname -a)" \
-  && echo "[show2]--> OS user: $USER"
+  # && echo -e "[show2]--> Current path is: $PWD, \n ls:\n`ls` \nrelease file path:`ls ./downloads`" \
+  # && echo "[show2]--> OS information1: $(lsb_release -a)" \
+  # && echo "[show2]--> OS information2: $(uname -a)" \
+  # && echo "[show2]--> OS user: $USER"
 
 
 # Install AI Reference Packages
@@ -138,6 +148,8 @@ COPY --from=galaxy /etc/ld.so.conf.d/GALAXY.conf /etc/ld.so.conf.d/GALAXY.conf
 COPY ./Dockerfile/PhoXiControl /usr/local/bin/PhoXiControl
 
 # Config PhoXiControl
+# add necessery ENV configuration，and Disable display
+ENV PHOXI_CONTROL_PATH="/opt/Photoneo/PhoXiControl" DOCKER=1 QT_X11_NO_MITSHM=1 PHOXI_WITHOUT_DISPLAY=1
 RUN set -eux \
     && mkdir /fonts && chmod a+x /fonts \
     && cd /tmp \
@@ -145,7 +157,6 @@ RUN set -eux \
     && chmod a+x /usr/local/bin/PhoXiControl \
     && ./phoxi.run --accept ${PHOXI_CONTROL_PATH} \
     && rm -rf phoxi.run \
-    && set -eux \
     && mkdir /root/.PhotoneoPhoXiControl
 
 CMD ["/usr/local/bin/PhoXiControl"]
