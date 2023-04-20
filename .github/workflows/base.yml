@@ -242,13 +242,7 @@ jobs:
         with:
           files: Dockerfile/ros_build.Dockerfile
 
-      - name: Show download release files
-        run: |
-          echo "[show]--> Current path is: $pwd, ls: $ls"
-          echo "[show]--> OS information1: $(lsb_release -a)"
-          echo "[show]--> OS information2: $(uname -a)"
-          echo "[show]--> OS user: $(who)"
-
+      
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v1
         
@@ -265,9 +259,17 @@ jobs:
       - name: Download release files
         uses: robinraju/release-downloader@v1.7
         with:
-          repository: "owner/repo"
+          repository: "vision"
           tag: "v0.0.1-3rdparty"
           fileName: "'json.hpp', 'paho.mqtt.*.tar.gz', 'phoxi.run', 'PhoXiControl', '*.whl', 'libredwg-0.12.4.tar.gz'"
+
+      - name: Show download release files
+        run: |
+          echo "[show]--> Current path is: $pwd, ls: $ls"
+          echo "[show]--> OS information1: $(lsb_release -a)"
+          echo "[show]--> OS information2: $(uname -a)"
+          echo "[show]--> OS user: $(who)"
+
 
       - name: Build and push        
         if: steps.changed-files-specific.outputs.any_changed == 'true'        
