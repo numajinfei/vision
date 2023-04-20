@@ -1,5 +1,0 @@
-inclinometer_node:
-  ros__parameters:
-    hz: 10
-    frame: 'map'
-    child: 'inclinometer'

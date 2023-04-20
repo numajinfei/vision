@@ -220,7 +220,7 @@ jobs:
     name: Build ros build
     runs-on: ubuntu-20.04
     # needs: [build-ros-basler, build-ros-galaxy, build-ros-opencv]
-    needs: [build-ros-basler, build-ros-galaxy]
+    # needs: [build-ros-basler, build-ros-galaxy]
 
     steps:
       - name: Check-out repository
