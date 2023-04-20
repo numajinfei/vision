@@ -265,10 +265,10 @@ jobs:
 
       - name: Show download release files
         run: |
-          echo "[show]--> Current path is: $pwd, ls: $ls"
+          echo -e "[show2]--> Current path is: $PWD, \n ls:\n`ls`"
           echo "[show]--> OS information1: $(lsb_release -a)"
           echo "[show]--> OS information2: $(uname -a)"
-          echo "[show]--> OS user: $(who)"
+          echo "[show]--> OS user: $USER"
 
 
       - name: Build and push        
