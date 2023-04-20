@@ -247,16 +247,11 @@ jobs:
         with:
           repository: "owner/repo"
           tag: "v0.0.1-3rdparty"
-          fileName: "json.hpp"
-          fileName: "paho.mqtt.*.tar.gz"
-          fileName: "phoxi.run"
-          fileName: "PhoXiControl"
-          fileName: "torch-1.13.0+cpu-cp38-cp38-linux_x86_64.whl"
-          fuleName: "libredwg-0.12.4.tar.gz"
+          fileName: "'json.hpp', 'paho.mqtt.*.tar.gz', 'phoxi.run', 'PhoXiControl', '*.whl', 'libredwg-0.12.4.tar.gz'"
 
       - name: Show download release files
         run: |
-          echo "[show]--> Current path is: $pwd"
+          echo "[show]--> Current path is: $pwd, ls: $ls"
           echo "[show]--> OS information1: $(lsb_release -a)"
           echo "[show]--> OS information2: $(uname -a)"
           echo "[show]--> OS user: $(who)"
