@@ -271,7 +271,7 @@ jobs:
           echo "[show]--> OS information2: $(uname -a)"
           echo "[show]--> OS user: $USER"
           echo "[show]--> GITHUB_WORKSPACE: $GITHUB_WORKSPACE"
-          echo -e "[show]--> Release files's path:`ls downloads`\n`ls $$GITHUB_WORKSPACE/downloads`"
+          echo -e "[show]--> Release files's path:`ls ./downloads`\n`ls $GITHUB_WORKSPACE/downloads`"
 
 
       - name: Build and push        
