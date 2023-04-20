@@ -56,7 +56,11 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 
 # Install AI Reference Packages
 RUN wget https://github.com/numajinfei/vision/releases/download/v0.0.1-3rdparty/torch-1.13.0+cpu-cp38-cp38-linux_x86_64.whl \
-  && pip3 install torch-1.13.0+cpu-cp38-cp38-linux_x86_64.whl
+  && pip3 install torch-1.13.0+cpu-cp38-cp38-linux_x86_64.whl \
+# Download phoxi.run
+  # && wget -O /tmp/phoxi.run http://121.4.181.196:9000/build/phoxi.run \
+  && wget -O /tmp/phoxi.run https://github.com/numajinfei/vision/releases/download/v0.0.1-3rdparty/phoxi.run \
+  && chmod +x /tmp/phoxi.run
 
 # Install nlohmann json
 # RUN wget https://github.com/nlohmann/json/releases/download/v3.9.1/json.hpp \
@@ -96,6 +100,22 @@ RUN wget -O paho.mqtt.cpp.tar.gz https://github.com/numajinfei/vision/releases/d
   && cp /usr/local/lib/libpaho* /opt/mqtt/lib \
   && rm -r paho.mqtt.cpp-1.2.0 build
 
+# Build libredwg
+RUN wget -O libredwg.tar.gz https://ftp.gnu.org/gnu/libredwg/libredwg-0.12.4.tar.gz \
+  && tar -xzf libredwg.tar.gz \
+  && rm libredwg.tar.gz \
+  && cd libredwg-0.12.4 \
+  #&& ./configure --prefix=/opt/redwg --disable-bindings --enable-release \
+  && ./configure --disable-bindings --enable-release \
+  && make -j `nproc` \  
+  && make install \
+  # 直接生成在 /usr/local下，改用/opt/redwg下会出现编译通不过问题
+  # && echo "/opt/redwg/lib" >> /etc/ld.so.conf.d/redwg.conf \
+  # && mkdir -p /opt/redwg/lib \
+  # && cp /usr/local/lib/libredwg* /opt/redwg/lib \
+  && cd - \
+  && rm -r libredwg-0.12.4
+
 # Install opencv
 # COPY --from=opencv /opt/opencv /opt/opencv
 # COPY --from=opencv /etc/ld.so.conf.d/OpenCV.conf /etc/ld.so.conf.d/OpenCV.conf
@@ -113,3 +133,19 @@ COPY --from=galaxy /etc/ld.so.conf.d/GALAXY.conf /etc/ld.so.conf.d/GALAXY.conf
 
 # Copy mqtt 
 #COPY /usr/local/lib/libpaho* /opt/mqtt/lib/
+
+# Copy PhoXiControl
+COPY ./Dockerfile/PhoXiControl /usr/local/bin/PhoXiControl
+
+# Config PhoXiControl
+RUN set -eux \
+    && mkdir /fonts && chmod a+x /fonts \
+    && cd /tmp \
+    && chmod a+x phoxi.run \
+    && chmod a+x /usr/local/bin/PhoXiControl \
+    && ./phoxi.run --accept ${PHOXI_CONTROL_PATH} \
+    && rm -rf phoxi.run \
+    && set -eux \
+    && mkdir /root/.PhotoneoPhoXiControl
+
+CMD ["/usr/local/bin/PhoXiControl"]

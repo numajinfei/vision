@@ -256,23 +256,23 @@ jobs:
           username: ${{ secrets.DOCKER_HUB_USERNAME }}
           password: ${{ secrets.DOCKER_HUB_ACCESS_TOKEN }}
 
-      - name: Download release files
-        uses: robinraju/release-downloader@v1.7
-        with:
-          # repository: "vision"
-          tag: "v0.0.1-3rdparty"
-          out-file-path: "downloads"
-          fileName: "'json.hpp', 'paho.mqtt.*.tar.gz', 'phoxi.run', 'PhoXiControl', '*.whl', 'libredwg-0.12.4.tar.gz'"
+      # - name: Download release files
+      #   uses: robinraju/release-downloader@v1.7
+      #   with:
+      #     # repository: "vision"
+      #     tag: "v0.0.1-3rdparty"
+      #     out-file-path: "downloads"
+      #     fileName: "'json.hpp', 'paho.mqtt.*.tar.gz', 'phoxi.run', 'PhoXiControl', '*.whl', 'libredwg-0.12.4.tar.gz'"
 
-      - name: Show download release files
-        run: |
-          echo -e "[show]--> Current path is: $PWD, \n ls:\n`ls $PWD`"
-          echo "[show]--> OS information1: $(lsb_release -a)"
-          echo "[show]--> OS information2: $(uname -a)"
-          echo "[show]--> OS user: $USER"
-          echo "[show]--> GITHUB_WORKSPACE: $GITHUB_WORKSPACE"
-          echo -e "[show]--> Release files's path:`ls ./downloads`"
-          echo -e "[show]--> Release files's path2:`ls $GITHUB_WORKSPACE/downloads`"
+      # - name: Show download release files
+      #   run: |
+      #     echo -e "[show]--> Current path is: $PWD, \n ls:\n`ls $PWD`"
+      #     echo "[show]--> OS information1: $(lsb_release -a)"
+      #     echo "[show]--> OS information2: $(uname -a)"
+      #     echo "[show]--> OS user: $USER"
+      #     echo "[show]--> GITHUB_WORKSPACE: $GITHUB_WORKSPACE"
+      #     echo -e "[show]--> Release files's path2:`ls $GITHUB_WORKSPACE/downloads`"
+      #     ls $PWD/downloads
 
 
       - name: Build and push        
