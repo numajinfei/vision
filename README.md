@@ -50,55 +50,68 @@
 
 ### 3. 系统软件包
 
-1. ros2 安装包
+#### 1.ros2 安装包
 
-   ros-galactic-pcl-conversions
+- ros-galactic-pcl-conversions
 
-2. ros2 导航依赖包安装
+#### 2. ros2 导航依赖包安装
 
-   - ros-galactic-bondcpp
-   - ros-galactic-test-msgs
-   - ros-galactic-behaviortree-cpp-v3
-   - ros-galactic-rviz-common
-   - ros-galactic-rviz-default-plugins
-   - ros-galactic-angles
-   - ros-galactic-cv-bridge
-   - ros-galactic-ompl
-   - ros-galactic-image-transport
-   - ros-galactic-gazebo-ros-pkgs
-   - ros-galactic-libg2o
-   - 
+- ros-galactic-bondcpp
+- ros-galactic-test-msgs
+- ros-galactic-behaviortree-cpp-v3
+- ros-galactic-rviz-common
+- ros-galactic-rviz-default-plugins
+- ros-galactic-angles
+- ros-galactic-cv-bridge
+- ros-galactic-ompl
+- ros-galactic-image-transport
+- ros-galactic-gazebo-ros-pkgs
+- ros-galactic-libg2o
+- 
 
-   - libopencv-dev 
+- libopencv-dev 
 
-   - graphicsmagick*
+- graphicsmagick*
 
-   - libsdl-image1.2-dev ，libsdl-dev
+- libsdl-image1.2-dev ，libsdl-dev
 
-   - libsuitesparse-dev
+- libsuitesparse-dev
 
-     
+  
 
-3. ros2 测头代码依赖包安装
+#### 3. ros2 测头代码依赖包安装
 
-   - ros-galactic-cv-bridge
+- ros-galactic-cv-bridge
 
-     
+  
 
-4. AI 相关包安装
+#### 4. AI 相关包安装
 
-   - python3-pip
-   - pip3 install opencv-python
-   - pip3 install torch torchvision torchaudio 
-   - pip3 install torchsummary tqdm
+- python3-pip
+- pip3 install opencv-python
+- pip3 install torch torchvision torchaudio 
+- pip3 install torchsummary tqdm
 
-   > 如外网下载失败或缓慢，则可从国内源下载：
-   >
-   > pip3 install opencv-python -i https://pypi.tuna.tsinghua.edu.cn/simple
-   >
-   > pip3 install torch torchvision torchaudio -i https://pypi.tuna.tsinghua.edu.cn/simple
+> 1. 如外网下载失败或缓慢，则可从国内源下载：
+>
+>    pip3 install opencv-python -i https://pypi.tuna.tsinghua.edu.cn/simple
+>
+>    pip3 install torch torchvision torchaudio -i https://pypi.tuna.tsinghua.edu.cn/simple
+>
+> 2. 直接安装包下载（可以减小生成镜像大小）
+>
+>    wget https://github.com/numajinfei/vision/releases/download/v0.0.1-3rdparty/torch-1.13.0+cpu-cp38-cp38-linux_x86_64.whl
+>
+>    pip3 install torch-1.13.0+cpu-cp38-cp38-linux_x86_64.whl
+>
+>    pip3 install torchsummary tqdm
 
+#### 5. phoxi sdk
 
+​	为外购测头photoneo的驱动sdk docker环境配置所需要
+
+- [phoxi.run](https://www.photoneo.com/downloads/phoxi-control#)
+- [PhoXiControl](https://github.com/photoneo/phoxi-docker)
 
 # 3. 代码编译相关
 
@@ -108,14 +121,20 @@ ros2节点编译脚本：
 node=$1
 if [ ! -n "$node" ]; then
     echo "Please input a package name!"
+  	exit 1
 fi
 
-#source install/setup.sh
-#source /opt/ros/galactic/setup.bash
 source install/setup.sh
-colcon build --packages-select $node --cmake-args -DCMAKE_BUILD_TYPE=Release
+echo "build node----->: $node"
+if [ "$node" == "all" ];then
+    colcon build --cmake-args -DCMAKE_BUILD_TYPE=Release
 
-source install/setup.sh
+else
+    #colcon build --packages-select $node --cmake-args -DCMAKE_BUILD_TYPE=Release
+# 设置编译时的资源，类似cmake -j4等
+    colcon build --packages-select $node --cmake-args -DCMAKE_BUILD_TYPE=Release --parallel-workers 2
+
+fi
 ```
 
 

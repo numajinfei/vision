@@ -6,8 +6,10 @@ LABEL maintainer="numajinfei@163.com"
 
 FROM ros:galactic
 
+# linux/amd64 or linux/arm64
+ARG TARGETPLATFORM
 
-# Install dependencies
+# [Install dependencies]
 RUN apt-get update && apt-get install -y --no-install-recommends \
   wget \
   vim \
@@ -25,7 +27,6 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
   ros-${ROS_DISTRO}-rviz-common \
   ros-${ROS_DISTRO}-rviz-default-plugins \
   ros-${ROS_DISTRO}-angles \
-  ros-${ROS_DISTRO}-cv-bridge \
   ros-${ROS_DISTRO}-ompl \
   ros-${ROS_DISTRO}-image-transport \
   ros-${ROS_DISTRO}-gazebo-ros-pkgs \
@@ -42,19 +43,9 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 # vision rependence packages:
   ros-${ROS_DISTRO}-cv-bridge \
   
-
 # AI rependence packages:
   python3-pip \
   && pip3 install opencv-python \
-
-# Phoxicontrol dependencies (gui...)
-  && apt-get install -y -q software-properties-common && apt-add-repository universe \
-  && apt-get update -y \
-  #---ubuntu18.04:
-  # && apt install -y avahi-utils libqt5core5a libqt5dbus5 libqt5gui5 libgtk2.0-0 libssl1.0.0 libgomp1 libpcre16-3 libflann-dev libssh2-1-dev libpng16-16 libglfw3-dev xcb
-  #---ubuntu20.04:
-  && apt install -y avahi-utils libqt5core5a libqt5dbus5 libqt5gui5 libgtk2.0-0 libssl1.1 libgomp1 libpcre16-3 libflann-dev libssh2-1-dev libpng16-16 libglfw3-dev xcb libxcb-xinerama0 libpcre2-16-0 \
-
 
 # rm 
   && rm -rf /var/lib/apt/lists/* \
@@ -64,21 +55,24 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
   && echo "[show2]--> OS user: $USER"
 
 
-# Install AI Reference Packages
-RUN wget https://github.com/numajinfei/vision/releases/download/v0.0.1-3rdparty/torch-1.13.0+cpu-cp38-cp38-linux_x86_64.whl \
+# [Install AI Reference Packages]
+RUN if [ "$TARGETPLATFORM" = "linux/amd64" ]; then \
+  wget https://github.com/numajinfei/vision/releases/download/v0.0.1-3rdparty/torch-1.13.0+cpu-cp38-cp38-linux_x86_64.whl \
   && pip3 install torch-1.13.0+cpu-cp38-cp38-linux_x86_64.whl \
-# Download phoxi.run
-  # && wget -O /tmp/phoxi.run http://121.4.181.196:9000/build/phoxi.run \
-  && wget -O /tmp/phoxi.run https://github.com/numajinfei/vision/releases/download/v0.0.1-3rdparty/phoxi.run \
-  && chmod +x /tmp/phoxi.run
+  && pip3 install torchsummary tqdm; fi
+RUN if [ "$TARGETPLATFORM" = "linux/arm64" ]; then \
+  wget https://files.pythonhosted.org/packages/2a/5e/a6859a5dfac9f4925707d5837d90ffcc9071677ca4a6392e9405d6bf432b/torch-1.13.0-cp38-cp38-manylinux2014_aarch64.whl \
+  && pip3 install torch-1.13.0-cp38-cp38-manylinux2014_aarch64.whl \
+  && pip3 install torchsummary tqdm; fi
 
-# Install nlohmann json
+# [Install nlohmann json && phoxi.run]
 # RUN wget https://github.com/nlohmann/json/releases/download/v3.9.1/json.hpp \
 RUN wget https://github.com/numajinfei/vision/releases/download/v0.0.1-3rdparty/json.hpp \
   && mkdir -p /usr/local/include/nlohmann \
-  && mv json.hpp /usr/local/include/nlohmann/json.hpp
+  && mv json.hpp /usr/local/include/nlohmann/json.hpp 
 
-# Build paho mqtt c
+
+# [Build paho mqtt c,cpp]
 # RUN wget -O paho.mqtt.c.tar.gz https://github.com/eclipse/paho.mqtt.c/archive/refs/tags/v1.3.9.tar.gz \
 RUN wget -O paho.mqtt.c.tar.gz https://github.com/numajinfei/vision/releases/download/v0.0.1-3rdparty/paho.mqtt.c-1.3.9.tar.gz \
   && tar -xzf paho.mqtt.c.tar.gz \
@@ -91,11 +85,10 @@ RUN wget -O paho.mqtt.c.tar.gz https://github.com/numajinfei/vision/releases/dow
     -S paho.mqtt.c-1.3.9/ \
     -Bbuild/ \
   && cmake --build build/ --target install \
-  && rm -r paho.mqtt.c-1.3.9 build
-
+  && rm -r paho.mqtt.c-1.3.9 build \
 # Build paho mqtt cpp
 # RUN wget -O paho.mqtt.cpp.tar.gz https://github.com/eclipse/paho.mqtt.cpp/archive/refs/tags/v1.2.0.tar.gz \
-RUN wget -O paho.mqtt.cpp.tar.gz https://github.com/numajinfei/vision/releases/download/v0.0.1-3rdparty/paho.mqtt.cpp-1.2.0.tar.gz \
+  && wget -O paho.mqtt.cpp.tar.gz https://github.com/numajinfei/vision/releases/download/v0.0.1-3rdparty/paho.mqtt.cpp-1.2.0.tar.gz \
   && tar -xzf paho.mqtt.cpp.tar.gz \
   && rm paho.mqtt.cpp.tar.gz \
   && cmake \
@@ -110,7 +103,7 @@ RUN wget -O paho.mqtt.cpp.tar.gz https://github.com/numajinfei/vision/releases/d
   && cp /usr/local/lib/libpaho* /opt/mqtt/lib \
   && rm -r paho.mqtt.cpp-1.2.0 build
 
-# Build libredwg
+# [Build libredwg]
 RUN wget -O libredwg.tar.gz https://ftp.gnu.org/gnu/libredwg/libredwg-0.12.4.tar.gz \
   && tar -xzf libredwg.tar.gz \
   && rm libredwg.tar.gz \
@@ -138,25 +131,8 @@ COPY --from=basler /etc/ld.so.conf.d/Pylon.conf /etc/ld.so.conf.d/Pylon.conf
 COPY --from=galaxy /opt/Galaxy_camera /opt/GALAXY
 COPY --from=galaxy /etc/ld.so.conf.d/GALAXY.conf /etc/ld.so.conf.d/GALAXY.conf
 
-# Copy pcl ld config file
-# COPY --from=pcl /etc/ld.so.conf.d/Pcl.conf /etc/ld.so.conf.d/Pcl.conf
 
 # Copy mqtt 
 #COPY /usr/local/lib/libpaho* /opt/mqtt/lib/
 
-# Copy PhoXiControl
-COPY ./Dockerfile/PhoXiControl /usr/local/bin/PhoXiControl
 
-# Config PhoXiControl
-# add necessery ENV configuration，and Disable display
-ENV PHOXI_CONTROL_PATH="/opt/Photoneo/PhoXiControl" DOCKER=1 QT_X11_NO_MITSHM=1 PHOXI_WITHOUT_DISPLAY=1
-RUN set -eux \
-    && mkdir /fonts && chmod a+x /fonts \
-    && cd /tmp \
-    && chmod a+x phoxi.run \
-    && chmod a+x /usr/local/bin/PhoXiControl \
-    && ./phoxi.run --accept ${PHOXI_CONTROL_PATH} \
-    && rm -rf phoxi.run \
-    && mkdir /root/.PhotoneoPhoXiControl
-
-CMD ["/usr/local/bin/PhoXiControl"]
