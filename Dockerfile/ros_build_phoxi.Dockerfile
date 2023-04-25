@@ -12,7 +12,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
   # && apt install -y avahi-utils libqt5core5a libqt5dbus5 libqt5gui5 libgtk2.0-0 libssl1.0.0 libgomp1 libpcre16-3 libflann-dev libssh2-1-dev libpng16-16 libglfw3-dev xcb
 #---ubuntu20.04:
   && apt install -y avahi-utils libqt5core5a libqt5dbus5 libqt5gui5 libgtk2.0-0 libssl1.1 libgomp1 libpcre16-3 libflann-dev libssh2-1-dev libpng16-16 libglfw3-dev xcb libxcb-xinerama0 libpcre2-16-0 \
-  && rm -rf /var/lib/apt/lists/*
+  && rm -rf /var/lib/apt/lists/* \
 
 # [Download phoxi.run]
 # RUN wget -O /tmp/phoxi.run https://github.com/numajinfei/vision/releases/download/v0.0.1-3rdparty/phoxi.run \
